@@ -12,6 +12,13 @@ typedef struct sLexemas
     struct sLexemas *proximo;
 } TLexemas;
 
+typedef struct sTabelaSimbolos
+{
+    char token[20];
+    int lido;
+    struct sTabelaSimbolos *proximo;
+} TTabSimbolo;
+
 void limpaCodigo(char exp[])
 {
     int i = 0, j;
@@ -50,25 +57,31 @@ void limpaCodigo(char exp[])
     }
 }
 
-int palavraReservada(char p[]){
+int palavraReservada(char p[])
+{
     p[strlen(p) + 1] = '\0';
-    //printf("\n%s", p);
-    if(strcmp(p, "public") == 0 || strcmp(p, "static") == 0 || 
-        strcmp(p, "void") == 0 || strcmp(p, "int") == 0 || strcmp(p, "float") == 0){
+
+    if (strcmp(p, "public") == 0 || strcmp(p, "static") == 0 ||
+        strcmp(p, "void") == 0 || strcmp(p, "int") == 0 || strcmp(p, "float") == 0)
+    {
         return 1;
-    } else {
+    }
+    else
+    {
         return 0;
     }
 }
 
-int pontuacao (char p){
-    if(p == '(' || p == ')' || p == '{' || p == '}' || p == ';' 
-                || p == '/' || p == ',' || p == '.' || p == '=' || p == '[' 
-                || p == ']'){
-            return 1;
-        } else {
-            return 0;
-        }
+int pontuacao(char p)
+{
+    if (p == '(' || p == ')' || p == '{' || p == '}' || p == ';' || p == '/' || p == ',' || p == '.' || p == '=' || p == '[' || p == ']')
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 void geradorLexemas(TLexemas **lexemas, char exp[])
@@ -82,11 +95,12 @@ void geradorLexemas(TLexemas **lexemas, char exp[])
         for (i = 0; isalnum(exp[i]) != 0; i++)
         {
             (*lexemas)->token[i] = exp[i];
-            if(palavraReservada((*lexemas)->token)){
+            if (palavraReservada((*lexemas)->token))
+            {
                 break;
             }
         }
-        //printf("\n%s  %d", (*lexemas)->token, strcmp((*lexemas)->token, "static") == 0);
+
         i++;
         (*lexemas)->token[i] = '\0';
     }
@@ -101,19 +115,19 @@ void geradorLexemas(TLexemas **lexemas, char exp[])
             while (isalnum(exp[i]))
             {
                 novo->token[j] = exp[i];
-                //printf("%c", novo->token);
+                
                 j++;
-                if(palavraReservada(novo->token)){
-                    //printf("\n%s  %d", novo->token, strcmp(novo->token, "static") == 0);
+                if (palavraReservada(novo->token))
+                {
                     break;
-                    }
-                if(!(isalnum(exp[i+1])))
+                }
+                if (!(isalnum(exp[i + 1])))
                     break;
                 i++;
             }
             novo->token[j] = '\0';
             novo->proximo = NULL;
-            //printf("\n%s  %d", novo->token, strcmp(novo->token, "static"));
+
             if (exp[i + 1] == '\0')
                 return;
             j = 0;
@@ -123,11 +137,9 @@ void geradorLexemas(TLexemas **lexemas, char exp[])
 
             while (isdigit(exp[i]))
             {
-                
+
                 novo->token[j] = exp[i];
-                
-                // if (!(isdigit(exp[i + 1])))
-                //     break;
+
                 i++;
                 j++;
             }
@@ -142,7 +154,7 @@ void geradorLexemas(TLexemas **lexemas, char exp[])
             novo->token[j] = exp[i];
             novo->token[j + 1] = '\0';
             novo->proximo = NULL;
-            
+
             if (exp[i + 1] == '\0')
                 return;
             j = 0;
@@ -157,23 +169,27 @@ void imprimeLexemas(TLexemas *lex)
 {
     TLexemas *proximo = lex;
     int id = 1;
- 
+
     printf("\nLista de Tokens\n");
     while (proximo != NULL)
     {
-        //printf("\n%d", strlen(proximo->token));
+       
         if (pontuacao(proximo->token[0]))
         {
             printf("\n<%c>", proximo->token[0]);
         }
         else
         {
-            if(palavraReservada(proximo->token)){
+            if (palavraReservada(proximo->token))
+            {
                 printf("\n<%s>", proximo->token);
-            } else if (isdigit(proximo->token[0])){
-        
+            }
+            else if (isdigit(proximo->token[0]))
+            {
                 printf("\n<NUM, %s>", proximo->token);
-            } else {
+            }
+            else
+            {
                 printf("\n<ID, %d>", id);
                 id++;
             }
@@ -182,32 +198,80 @@ void imprimeLexemas(TLexemas *lex)
     }
 }
 
-void imprimeTabelaSimbolos (TLexemas *lex){
-    TLexemas *proximo = lex;
-    int i = 1,  lido = 0;
+void imprimeTabelaSimbolos(TTabSimbolo *tab)
+{
+    TTabSimbolo *proximo = tab;
+    int i = 1;
 
     printf("\n\nTabela de Simbolos\n");
     while (proximo != NULL)
     {
-        //printf("\n%d", strlen(proximo->token));
-        if (!(pontuacao(proximo->token[0])) && !(palavraReservada(proximo->token)) && !(isdigit(proximo->token[0]))){
-            if(proximo->token[0] == 'a' || proximo->token[0] == 'b'){
-                
-                if(lido == 0)
-                    printf("\n%d | %c", i, proximo->token[0]);
-                lido = 1;
-            } else{
+        
+        if (!(pontuacao(proximo->token[0])) && !(palavraReservada(proximo->token)) && !(isdigit(proximo->token[0])) && proximo->lido == 0)
+        {
             printf("\n%d | %s", i, proximo->token);
             i++;
-            }
         }
 
         proximo = proximo->proximo;
     }
 }
 
+void geradorTabelaSimbolos(TLexemas *lex, TTabSimbolo **tab)
+{
+    if (*tab == NULL)
+    {
+        *tab = malloc(sizeof(TTabSimbolo));
+
+        strcpy((*tab)->token, lex->token);
+        (*tab)->proximo = NULL;
+        (*tab)->lido = 0;
+    }
+
+    TLexemas *proximo = lex;
+    TTabSimbolo *novo = *tab;
+    TTabSimbolo *ultimo = *tab;
+    char simboloExistente[20];
+    while (novo->proximo != NULL)
+    {
+        novo = novo->proximo;
+    }
+
+    while (proximo != NULL)
+    {
+        strcpy(simboloExistente, ultimo->token);
+        while (strcmp(proximo->token, simboloExistente) != 0 && strcmp(simboloExistente, "inexistente") != 0)
+        {
+            ultimo = ultimo->proximo;
+            if (ultimo == NULL)
+            {
+                strcpy(simboloExistente, "inexistente");
+            }
+            else
+            {
+                strcpy(simboloExistente, ultimo->token);
+            }
+            
+        }
+
+        if (ultimo == NULL)
+        {
+
+            novo->proximo = malloc(sizeof(TTabSimbolo));
+            novo = novo->proximo;
+
+            strcpy(novo->token, proximo->token);
+            novo->lido = 0;
+            novo->proximo = NULL;
+        }
+        ultimo = *tab;
+        proximo = proximo->proximo;
+    }
+}
+
 int main()
 {
+    TTabSimbolo *tabelaSimbolos = NULL;
     TLexemas *listaLexemas = NULL;
     char expressao[] = "public static  void main   (String    [] args){\n\tint a = 10, b = 4;\n\tfloat c = a / b;\n\tSystem.out.print(c);\n}";
 
@@ -222,11 +286,10 @@ int main()
     scanf("%[^\n]", expressao); */
 
     geradorLexemas(&listaLexemas, expressao);
-
     imprimeLexemas(listaLexemas);
-    imprimeTabelaSimbolos(listaLexemas);
+
+    geradorTabelaSimbolos(listaLexemas, &tabelaSimbolos);
+    imprimeTabelaSimbolos(tabelaSimbolos);
 
     return 0;
 }
-
-// if(strcmp(novo->token, "public") || strcmp(novo->token, "static") || strcmp(novo->token, "void"))
