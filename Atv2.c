@@ -8,7 +8,6 @@
 typedef struct sLexemas
 {
     char token[20];
-    // char tipo[10]; //id, palavra reservada, pontuação
     struct sLexemas *proximo;
 } TLexemas;
 
