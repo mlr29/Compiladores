@@ -18,23 +18,26 @@ WHITESPACE  [ ]
 quebra      \n
 TAB         \t
 STRING      \"[^\"]*\"
-
+FUNC        "func"
 /* Regras de análise */
 %%
-{quebra}                { /* Ignora quebras de linha */ }
 
 "/*"                    { linha = yylineno; BEGIN(COMMENT); }
 <COMMENT>"*/"           { BEGIN(INITIAL); }
 <COMMENT>(.|\n)         ;  // Ignora o conteúdo dos comentários
 <COMMENT><<EOF>>        { fprintf(out, "(%d, ERROR, \"/*\")\n", linha); return ERROR; }
 
-{STRING}                { yylval.str = strdup(yytext); return STRING; }
+"import" { return IMPORT; }
 
-break|case|chan|const|continue|default|defer|else|fallthrough|for|func|go|goto|if|import|interface|map|range|select {yylval.str = strdup(yytext); return KEYWORD; } // Use um único token para simplificar
+"package" { return PACKAGE; }
 
-"package" {return PACKAGE;} 
+"func" { return FUNC; }
 
 "+"|"-"|"*"|"/"|"<"|"<="|">"|">="|"=="|"!="|"="|";"|","|"("|")"|"["|"]"|"{"|"}"|":"|"." { return yytext[0]; } // Retorna o próprio símbolo
+
+break|case|chan|const|continue|default|defer|else|fallthrough|for|go|goto|if|interface|map|range|select {yylval.str = strdup(yytext); return KEYWORD; } // Use um único token para simplificar
+
+{STRING}                { yylval.str = strdup(yytext); return STRING; }
 
 {WHITESPACE}+|{quebra}|{TAB}+  ; /* Ignora espaços em branco, quebras de linha e tabulações */
 

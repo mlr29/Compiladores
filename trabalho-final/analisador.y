@@ -5,15 +5,10 @@
 void yyerror(const char *s);
 int yylex();
 extern FILE *yyin;
-// extern int yylineno; // Linha atual fornecida pelo Flex
-// extern int yycolumn; // Coluna atual que você deve gerenciar no Flex
-
-// int yyerror(char *s) {
-//     fprintf(stderr, "Erro: %s na linha %d, coluna %d\n", s, yylineno, yycolumn);
-//     return 0;
-// }
 
 %}
+
+
 
 %union {
     int num;
@@ -21,8 +16,12 @@ extern FILE *yyin;
 }
 
 %token <num> NUMBER
-%token <str> PACKAGE IDENTIFIER STRING KEYWORD 
+%token <str> PACKAGE IMPORT
+%token <str> FUNC IDENTIFIER STRING KEYWORD 
 %token ERROR
+
+%debug
+
 %%
 
 program:
@@ -34,11 +33,11 @@ package_stmt:
     ;
 
 import_stmt:
-    KEYWORD STRING { printf("Reconhecido: import %s\n", $2); }
+    IMPORT STRING { printf("Reconhecido: import %s\n", $2); }
     ;
 
 func_main_stmt:
-    println_stmt  
+    FUNC IDENTIFIER '(' ')' '{' println_stmt '}' 
     ;
 
 println_stmt:
@@ -46,8 +45,11 @@ println_stmt:
     ;
 
 %%
+
 void yyerror(const char *s) {
-    fprintf(stderr, "Erro de sintaxe: %s\n", s);
+    extern char *yytext; // `yytext` é definido pelo Flex
+    extern int yylineno; // `yylineno` é definido pelo Flex com a opção %option yylineno
+    fprintf(stderr, "Erro de sintaxe na linha %d: %s próximo de '%s'\n", yylineno, s, yytext);
 }
 
 int main(int argc, char *argv[]) {
