@@ -6,8 +6,9 @@
 void yyerror(const char *s);
 int yylex(), nId = 0;
 void addSymbol(char *name, char *type, int line); 
-extern FILE *yyin;
+void generateIntermediateCode(const char *code);
 
+extern FILE *yyin;
 
 typedef struct {
     char *name;
@@ -20,9 +21,11 @@ typedef struct {
 Symbol symbolTable[MAX_SYMBOLS];
 int symbolCount = 0;
 
+/* Buffer para armazenar o código intermediário */
+char intermediateCode[1000][100];
+int intermediateLine = 0;
+
 %}
-
-
 
 %union {
     int num;
@@ -59,10 +62,23 @@ int_var:
     | ;
 
 atr_var_int:
-    IDENTIFIER '=' NUMBER_INT ';' {printf("Reconhecido: atribuicao %s = %d\n", $1, $3);}
+    IDENTIFIER '=' NUMBER_INT ';' 
+    {
+        printf("Reconhecido: atribuicao %s = %d\n", $1, $3);
+        char code[100];
+        sprintf(code, "%s = %d", $1, $3);
+        generateIntermediateCode(code);
+    }
+    ;
 
 println_stmt:
-    IDENTIFIER '.' IDENTIFIER '(' STRING ')' ';' { printf("Reconhecido: chamada de %s.%s\n", $1, $3); }
+    IDENTIFIER '.' IDENTIFIER '(' STRING ')' ';' 
+    {
+        printf("Reconhecido: chamada de %s.%s\n", $1, $3);
+        char code[100];
+        sprintf(code, "CALL %s.%s, %s", $1, $3, $5);
+        generateIntermediateCode(code);
+    }
     | ;
 
 %%
@@ -71,11 +87,12 @@ println_stmt:
 void addSymbol(char *name, char *type, int line) {
     FILE *a = fopen("tsimbolo.txt", "a");
 
-    if(a){
+    if (a) {
         fprintf(a, "%d %s %s\n", line, name, type);
         fclose(a);
-    } else{ printf("erro ao abrir tabela de simbolos.");}
-
+    } else {
+        printf("erro ao abrir tabela de simbolos.");
+    }
 
     if (symbolCount < MAX_SYMBOLS) {
         symbolTable[symbolCount].name = strdup(name);
@@ -88,16 +105,14 @@ void addSymbol(char *name, char *type, int line) {
     }
 }
 
-
-
-/* Função para procurar símbolos na tabela */
-int lookupSymbol(char *name) {
-    for (int i = 0; i < symbolCount; i++) {
-        if (strcmp(symbolTable[i].name, name) == 0) {
-            return i;
-        }
+/* Função para gerar código intermediário */
+void generateIntermediateCode(const char *code) {
+    if (intermediateLine < 1000) {
+        strcpy(intermediateCode[intermediateLine++], code);
+        printf("Código intermediário gerado: %s\n", code);
+    } else {
+        fprintf(stderr, "Erro: buffer de código intermediário cheio\n");
     }
-    return -1;
 }
 
 void yyerror(const char *s) {
@@ -118,5 +133,13 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    return yyparse();
+    int result = yyparse();
+
+    /* Imprimir código intermediário */
+    printf("\nCódigo intermediário gerado:\n");
+    for (int i = 0; i < intermediateLine; i++) {
+        printf("%s\n", intermediateCode[i]);
+    }
+
+    return result;
 }

@@ -27,11 +27,15 @@ FUNC        "func"
 <COMMENT>(.|\n)         ;  // Ignora o conteúdo dos comentários
 <COMMENT><<EOF>>        { fprintf(out, "(%d, ERROR, \"/*\")\n", linha); return ERROR; }
 
-"import" { return IMPORT; }
+"import" { yylval.str = strdup(yytext); return IMPORT; }
 
 "package" { return PACKAGE; }
 
 "func" { return FUNC; }
+
+"var" { return VAR; }
+
+"int" { yylval.str = strdup(yytext); return INT_TYPE;}
 
 "+"|"-"|"*"|"/"|"<"|"<="|">"|">="|"=="|"!="|"="|";"|","|"("|")"|"["|"]"|"{"|"}"|":"|"." { return yytext[0]; } // Retorna o próprio símbolo
 
@@ -41,7 +45,8 @@ break|case|chan|const|continue|default|defer|else|fallthrough|for|go|goto|if|int
 
 {WHITESPACE}+|{quebra}|{TAB}+  ; /* Ignora espaços em branco, quebras de linha e tabulações */
 
-{digit}+                { yylval.num = atoi(yytext); return NUMBER; }
+{digit}+                { yylval.num = atoi(yytext); return NUMBER_INT; }
+{digit}+\.{digit}+      { yylval.num = atoi(yytext); return NUMBER_FLOAT; }
 {ID}                    { yylval.str = strdup(yytext); return IDENTIFIER; }
 
 .                       { fprintf(out, "(%d, ERROR, \"%s\")\n", yylineno, yytext); return ERROR; }
