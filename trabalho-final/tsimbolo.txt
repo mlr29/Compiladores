@@ -1,0 +1,4 @@
+0 "fmt" import
+1 "asd" import
+2 b int
+3 a int
