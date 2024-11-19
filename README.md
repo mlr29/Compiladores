@@ -22,11 +22,11 @@ Para análisar o script teste `gteste.go` execute a seguinte sequência de instr
 
 Isso cria um arquivo `lex.yy.c` que contém o código C gerado pelo Flex.
 
-`bison -d analisador.y`
+`bison -d a-cod-interm.y`
 
 Isso cria um arquivo `analisador.tab.c` que contém o código C gerado pelo Yacc.
 
-`gcc lex.yy.c analisador.tab.c -o compilador -ll`
+`gcc lex.yy.c a-cod-interm.tab.c -o compilador -ll`
 
 Estabelece a conexão entre o arquivo gerados do Flex e Yacc e gera o arquivo `compilador` com o analisador final.
 

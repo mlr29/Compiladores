@@ -1,7 +1,7 @@
 %{
 #include <string.h>
 #include <stdio.h>
-#include "analisador.tab.h" 
+#include "a-cod-interm.tab.h" 
 
 FILE *out;
 int linha; // Armazena a linha onde comentários começam
