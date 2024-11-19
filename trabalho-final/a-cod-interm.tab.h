@@ -73,7 +73,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 30 "a-cod-interm.y"
+#line 36 "a-cod-interm.y"
 
     int num;
     char *str;
