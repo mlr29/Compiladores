@@ -77,6 +77,11 @@ void yyerror(const char *s);
 int yylex(), nId = 0;
 void addSymbol(char *name, char *type, int line); 
 void generateIntermediateCode(const char *code);
+void checkVariableDeclared(char *name);
+void checkVariableType(char *name, char *expectedType);
+void semanticError(const char *message, int line);
+
+extern int yylineno;
 
 extern FILE *yyin;
 
@@ -84,6 +89,7 @@ typedef struct {
     char *name;
     char *type;
     int line;
+    int initialized;
 } Symbol;
 
 #define MAX_SYMBOLS 100
@@ -96,7 +102,7 @@ char intermediateCode[1000][100];
 int intermediateLine = 0;
 
 
-#line 100 "a-cod-interm.tab.c"
+#line 106 "a-cod-interm.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -150,9 +156,11 @@ enum yysymbol_kind_t
   YYSYMBOL_package_stmt = 23,              /* package_stmt  */
   YYSYMBOL_import_stmt = 24,               /* import_stmt  */
   YYSYMBOL_func_main_stmt = 25,            /* func_main_stmt  */
-  YYSYMBOL_int_var = 26,                   /* int_var  */
-  YYSYMBOL_atr_var_int = 27,               /* atr_var_int  */
-  YYSYMBOL_println_stmt = 28               /* println_stmt  */
+  YYSYMBOL_stmt_list = 26,                 /* stmt_list  */
+  YYSYMBOL_stmt = 27,                      /* stmt  */
+  YYSYMBOL_int_var = 28,                   /* int_var  */
+  YYSYMBOL_atr_var_int = 29,               /* atr_var_int  */
+  YYSYMBOL_println_stmt = 30               /* println_stmt  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -480,16 +488,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   34
+#define YYLAST   31
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  21
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  8
+#define YYNNTS  10
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  11
+#define YYNRULES  14
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  35
+#define YYNSTATES  36
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   268
@@ -539,8 +547,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    45,    45,    49,    53,    54,    57,    61,    62,    65,
-      75,    82
+       0,    51,    51,    55,    59,    60,    63,    67,    68,    72,
+      73,    74,    78,    82,   102
 };
 #endif
 
@@ -560,7 +568,8 @@ static const char *const yytname[] =
   "NUMBER_FLOAT", "PACKAGE", "FUNC", "VAR", "IDENTIFIER", "STRING",
   "KEYWORD", "INT_TYPE", "IMPORT", "ERROR", "'('", "')'", "'{'", "'}'",
   "';'", "'='", "'.'", "$accept", "program", "package_stmt", "import_stmt",
-  "func_main_stmt", "int_var", "atr_var_int", "println_stmt", YY_NULLPTR
+  "func_main_stmt", "stmt_list", "stmt", "int_var", "atr_var_int",
+  "println_stmt", YY_NULLPTR
 };
 
 static const char *
@@ -570,7 +579,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-11)
+#define YYPACT_NINF (-16)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -584,10 +593,10 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -4,    -5,     2,   -11,   -11,   -11,    -6,    -3,    -2,   -11,
-     -10,   -11,    -7,    -1,     3,     1,     4,     0,     5,     6,
-       7,    10,     8,     9,     3,    11,    12,   -11,   -11,   -11,
-      13,    14,    15,    16,   -11
+      -4,    -1,     8,   -16,   -16,   -16,    -6,     1,     2,   -16,
+      -2,   -16,     0,    -3,    -5,     6,   -15,    -7,    -5,   -16,
+     -16,   -16,     5,    14,    10,   -16,   -16,     3,     4,     9,
+     -16,   -16,    11,    12,     7,   -16
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -596,21 +605,21 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     5,     3,     1,     0,     0,     0,     2,
-       0,     4,     0,     0,     8,     0,     0,     0,     0,    11,
-       0,     0,     0,     0,     8,     0,     0,     6,     7,     9,
-       0,     0,     0,     0,    10
+       0,     4,     0,     0,     8,     0,     0,     0,     8,     9,
+      10,    11,     0,     0,     0,     6,     7,     0,     0,     0,
+      12,    13,     0,     0,     0,    14
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -11,   -11,   -11,   -11,   -11,    -8,   -11,   -11
+     -16,   -16,   -16,   -16,   -16,    13,   -16,   -16,   -16,   -16
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3,     6,     9,    16,    19,    23
+       0,     2,     3,     6,     9,    17,    18,    19,    20,    21
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -618,18 +627,18 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       7,     1,     5,     4,    12,    10,     8,    11,    13,    17,
-      15,    20,    18,    25,    22,    14,    28,     0,     0,     0,
-      30,     0,     0,    32,    21,    24,    27,    31,    26,    29,
-      33,     0,     0,     0,    34
+       7,     1,    15,    16,    23,    24,     8,     4,     5,    10,
+      25,    11,    12,    14,    22,    13,    27,    28,    29,     0,
+      33,    30,    31,    32,     0,    35,     0,    34,     0,     0,
+       0,    26
 };
 
 static const yytype_int8 yycheck[] =
 {
-       6,     5,     0,     8,    14,     8,    12,     9,    15,     8,
-       7,    11,     8,     3,     8,    16,    24,    -1,    -1,    -1,
-       8,    -1,    -1,     9,    19,    18,    17,    14,    20,    18,
-      15,    -1,    -1,    -1,    18
+       6,     5,     7,     8,    19,    20,    12,     8,     0,     8,
+      17,     9,    14,    16,     8,    15,    11,     3,     8,    -1,
+       9,    18,    18,    14,    -1,    18,    -1,    15,    -1,    -1,
+      -1,    18
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -637,23 +646,23 @@ static const yytype_int8 yycheck[] =
 static const yytype_int8 yystos[] =
 {
        0,     5,    22,    23,     8,     0,    24,     6,    12,    25,
-       8,     9,    14,    15,    16,     7,    26,     8,     8,    27,
-      11,    19,     8,    28,    18,     3,    20,    17,    26,    18,
-       8,    14,     9,    15,    18
+       8,     9,    14,    15,    16,     7,     8,    26,    27,    28,
+      29,    30,     8,    19,    20,    17,    26,    11,     3,     8,
+      18,    18,    14,     9,    15,    18
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
        0,    21,    22,    23,    24,    24,    25,    26,    26,    27,
-      28,    28
+      27,    27,    28,    29,    30
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     3,     2,     3,     0,     9,     5,     0,     4,
-       7,     0
+       0,     2,     3,     2,     3,     0,     7,     2,     0,     1,
+       1,     1,     4,     4,     7
 };
 
 
@@ -1117,47 +1126,69 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* package_stmt: PACKAGE IDENTIFIER  */
-#line 49 "a-cod-interm.y"
+#line 55 "a-cod-interm.y"
                        { printf("Reconhecido: pacote %s\n", (yyvsp[0].str)); }
-#line 1123 "a-cod-interm.tab.c"
+#line 1132 "a-cod-interm.tab.c"
     break;
 
   case 4: /* import_stmt: import_stmt IMPORT STRING  */
-#line 53 "a-cod-interm.y"
+#line 59 "a-cod-interm.y"
                               { addSymbol((yyvsp[0].str), (yyvsp[-1].str), nId); printf("Reconhecido: import %s\n", (yyvsp[0].str)); }
-#line 1129 "a-cod-interm.tab.c"
+#line 1138 "a-cod-interm.tab.c"
     break;
 
-  case 7: /* int_var: VAR IDENTIFIER INT_TYPE ';' int_var  */
-#line 61 "a-cod-interm.y"
-                                        { addSymbol((yyvsp[-3].str), (yyvsp[-2].str), nId); printf("Reconhecido: variável int %s\n", (yyvsp[-3].str));}
-#line 1135 "a-cod-interm.tab.c"
+  case 12: /* int_var: VAR IDENTIFIER INT_TYPE ';'  */
+#line 78 "a-cod-interm.y"
+                                { addSymbol((yyvsp[-2].str), (yyvsp[-1].str), nId); printf("Reconhecido: variável int %s\n", (yyvsp[-2].str));}
+#line 1144 "a-cod-interm.tab.c"
     break;
 
-  case 9: /* atr_var_int: IDENTIFIER '=' NUMBER_INT ';'  */
-#line 66 "a-cod-interm.y"
+  case 13: /* atr_var_int: IDENTIFIER '=' NUMBER_INT ';'  */
+#line 83 "a-cod-interm.y"
     {
+        checkVariableDeclared((yyvsp[-3].str));
+        checkVariableType((yyvsp[-3].str), "int");
+        
+        for (int i = 0; i < symbolCount; i++) {
+            if (strcmp(symbolTable[i].name, (yyvsp[-3].str)) == 0) {
+                symbolTable[i].initialized = 1;
+                break;
+            }
+        }
+        
         printf("Reconhecido: atribuicao %s = %d\n", (yyvsp[-3].str), (yyvsp[-1].num));
         char code[100];
         sprintf(code, "%s = %d", (yyvsp[-3].str), (yyvsp[-1].num));
         generateIntermediateCode(code);
     }
-#line 1146 "a-cod-interm.tab.c"
+#line 1165 "a-cod-interm.tab.c"
     break;
 
-  case 10: /* println_stmt: IDENTIFIER '.' IDENTIFIER '(' STRING ')' ';'  */
-#line 76 "a-cod-interm.y"
+  case 14: /* println_stmt: IDENTIFIER '.' IDENTIFIER '(' STRING ')' ';'  */
+#line 103 "a-cod-interm.y"
     {
+        int fmtImported = 0;
+        for (int i = 0; i < symbolCount; i++) {
+            if (strcmp(symbolTable[i].type, "import") == 0 && 
+                strstr(symbolTable[i].name, "fmt") != NULL) {
+                fmtImported = 1;
+                break;
+            }
+        }
+        if (!fmtImported) {
+            semanticError("Pacote 'fmt' não importado", yylineno);
+        }
+        
         printf("Reconhecido: chamada de %s.%s\n", (yyvsp[-6].str), (yyvsp[-4].str));
         char code[100];
         sprintf(code, "CALL %s.%s, %s", (yyvsp[-6].str), (yyvsp[-4].str), (yyvsp[-2].str));
         generateIntermediateCode(code);
     }
-#line 1157 "a-cod-interm.tab.c"
+#line 1188 "a-cod-interm.tab.c"
     break;
 
 
-#line 1161 "a-cod-interm.tab.c"
+#line 1192 "a-cod-interm.tab.c"
 
       default: break;
     }
@@ -1350,7 +1381,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 84 "a-cod-interm.y"
+#line 123 "a-cod-interm.y"
 
 
 /* Função para adicionar símbolos à tabela */
@@ -1368,6 +1399,7 @@ void addSymbol(char *name, char *type, int line) {
         symbolTable[symbolCount].name = strdup(name);
         symbolTable[symbolCount].type = strdup(type);
         symbolTable[symbolCount].line = line;
+        symbolTable[symbolCount].initialized = 0;
         symbolCount++;
         nId++;
     } else {
@@ -1389,6 +1421,35 @@ void yyerror(const char *s) {
     extern char *yytext; // `yytext` é definido pelo Flex
     extern int yylineno; // `yylineno` é definido pelo Flex com a opção %option yylineno
     fprintf(stderr, "Erro de sintaxe na linha %d: %s próximo de '%s'\n", yylineno, s, yytext);
+}
+
+void checkVariableDeclared(char *name) {
+    for (int i = 0; i < symbolCount; i++) {
+        if (strcmp(symbolTable[i].name, name) == 0) {
+            return;
+        }
+    }
+    char error[100];
+    sprintf(error, "Variável '%s' não foi declarada", name);
+    semanticError(error, yylineno);
+}
+
+void checkVariableType(char *name, char *expectedType) {
+    for (int i = 0; i < symbolCount; i++) {
+        if (strcmp(symbolTable[i].name, name) == 0) {
+            if (strcmp(symbolTable[i].type, expectedType) != 0) {
+                char error[100];
+                sprintf(error, "Tipo incompatível para variável '%s'", name);
+                semanticError(error, yylineno);
+            }
+            return;
+        }
+    }
+}
+
+void semanticError(const char *message, int line) {
+    fprintf(stderr, "Erro semântico na linha %d: %s\n", line, message);
+    exit(1);
 }
 
 int main(int argc, char *argv[]) {

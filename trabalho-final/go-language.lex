@@ -4,11 +4,12 @@
 #include "a-cod-interm.tab.h" 
 
 FILE *out;
-int linha; // Armazena a linha onde comentários começam
+int linha;
 %}
 
 %option yylineno
 %x COMMENT
+%x LINE_COMMENT
 
 /* Definições de padrões */
 digit       [0-9]
@@ -19,12 +20,16 @@ quebra      \n
 TAB         \t
 STRING      \"[^\"]*\"
 FUNC        "func"
-/* Regras de análise */
+
 %%
+
+"//"                    { BEGIN(LINE_COMMENT); }
+<LINE_COMMENT>\n       { BEGIN(INITIAL); }
+<LINE_COMMENT>.        ; /* Ignora tudo até o fim da linha */
 
 "/*"                    { linha = yylineno; BEGIN(COMMENT); }
 <COMMENT>"*/"           { BEGIN(INITIAL); }
-<COMMENT>(.|\n)         ;  // Ignora o conteúdo dos comentários
+<COMMENT>(.|\n)         ;  /* Ignora o conteúdo dos comentários */
 <COMMENT><<EOF>>        { fprintf(out, "(%d, ERROR, \"/*\")\n", linha); return ERROR; }
 
 "import" { yylval.str = strdup(yytext); return IMPORT; }
@@ -37,9 +42,9 @@ FUNC        "func"
 
 "int" { yylval.str = strdup(yytext); return INT_TYPE;}
 
-"+"|"-"|"*"|"/"|"<"|"<="|">"|">="|"=="|"!="|"="|";"|","|"("|")"|"["|"]"|"{"|"}"|":"|"." { return yytext[0]; } // Retorna o próprio símbolo
+"+"|"-"|"*"|"/"|"<"|"<="|">"|">="|"=="|"!="|"="|";"|","|"("|")"|"["|"]"|"{"|"}"|":"|"." { return yytext[0]; }
 
-break|case|chan|const|continue|default|defer|else|fallthrough|for|go|goto|if|interface|map|range|select {yylval.str = strdup(yytext); return KEYWORD; } // Use um único token para simplificar
+break|case|chan|const|continue|default|defer|else|fallthrough|for|go|goto|if|interface|map|range|select {yylval.str = strdup(yytext); return KEYWORD; }
 
 {STRING}                { yylval.str = strdup(yytext); return STRING; }
 
@@ -50,36 +55,9 @@ break|case|chan|const|continue|default|defer|else|fallthrough|for|go|goto|if|int
 {ID}                    { yylval.str = strdup(yytext); return IDENTIFIER; }
 
 .                       { fprintf(out, "(%d, ERROR, \"%s\")\n", yylineno, yytext); return ERROR; }
+
 %%
 
-// Implementação da função main e do yywrap
 int yywrap() {
     return 1;
 }
-
-// int main(int argc, char *argv[]) {
-//     if (argc < 3) {
-//         printf("Uso: %s <arquivo de entrada> <arquivo de saída>\n", argv[0]);
-//         return -1;
-//     }
-    
-//     FILE *arquivo = fopen(argv[1], "r");
-//     if (!arquivo) {
-//         printf("Arquivo inexistente.\n");
-//         return -1;
-//     }
-    
-//     yyin = arquivo;
-//     out = fopen(argv[2], "w");
-//     if (!out) {
-//         printf("Erro ao abrir o arquivo de saída.\n");
-//         fclose(arquivo);
-//         return -1;
-//     }
-    
-//     yyparse(); // Chamada para o parser Yacc
-    
-//     fclose(arquivo);
-//     fclose(out);
-//     return 0;
-// }

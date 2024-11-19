@@ -7,6 +7,11 @@ void yyerror(const char *s);
 int yylex(), nId = 0;
 void addSymbol(char *name, char *type, int line); 
 void generateIntermediateCode(const char *code);
+void checkVariableDeclared(char *name);
+void checkVariableType(char *name, char *expectedType);
+void semanticError(const char *message, int line);
+
+extern int yylineno;
 
 extern FILE *yyin;
 
@@ -14,6 +19,7 @@ typedef struct {
     char *name;
     char *type;
     int line;
+    int initialized;
 } Symbol;
 
 #define MAX_SYMBOLS 100
@@ -54,16 +60,37 @@ import_stmt:
     | ;
 
 func_main_stmt:
-    FUNC IDENTIFIER '(' ')' '{' int_var atr_var_int println_stmt '}' 
+    FUNC IDENTIFIER '(' ')' '{' stmt_list '}' 
+    ;
+
+stmt_list:
+    stmt stmt_list
+    | /* vazio */
+    ;
+
+stmt:
+    int_var
+    | atr_var_int
+    | println_stmt
     ;
 
 int_var:
-    VAR IDENTIFIER INT_TYPE ';' int_var { addSymbol($2, $3, nId); printf("Reconhecido: variável int %s\n", $2);}
-    | ;
+    VAR IDENTIFIER INT_TYPE ';' { addSymbol($2, $3, nId); printf("Reconhecido: variável int %s\n", $2);}
+    ;
 
 atr_var_int:
-    IDENTIFIER '=' NUMBER_INT ';' 
+    IDENTIFIER '=' NUMBER_INT ';'
     {
+        checkVariableDeclared($1);
+        checkVariableType($1, "int");
+        
+        for (int i = 0; i < symbolCount; i++) {
+            if (strcmp(symbolTable[i].name, $1) == 0) {
+                symbolTable[i].initialized = 1;
+                break;
+            }
+        }
+        
         printf("Reconhecido: atribuicao %s = %d\n", $1, $3);
         char code[100];
         sprintf(code, "%s = %d", $1, $3);
@@ -72,14 +99,26 @@ atr_var_int:
     ;
 
 println_stmt:
-    IDENTIFIER '.' IDENTIFIER '(' STRING ')' ';' 
+    IDENTIFIER '.' IDENTIFIER '(' STRING ')' ';'
     {
+        int fmtImported = 0;
+        for (int i = 0; i < symbolCount; i++) {
+            if (strcmp(symbolTable[i].type, "import") == 0 && 
+                strstr(symbolTable[i].name, "fmt") != NULL) {
+                fmtImported = 1;
+                break;
+            }
+        }
+        if (!fmtImported) {
+            semanticError("Pacote 'fmt' não importado", yylineno);
+        }
+        
         printf("Reconhecido: chamada de %s.%s\n", $1, $3);
         char code[100];
         sprintf(code, "CALL %s.%s, %s", $1, $3, $5);
         generateIntermediateCode(code);
     }
-    | ;
+    ;
 
 %%
 
@@ -98,6 +137,7 @@ void addSymbol(char *name, char *type, int line) {
         symbolTable[symbolCount].name = strdup(name);
         symbolTable[symbolCount].type = strdup(type);
         symbolTable[symbolCount].line = line;
+        symbolTable[symbolCount].initialized = 0;
         symbolCount++;
         nId++;
     } else {
@@ -119,6 +159,35 @@ void yyerror(const char *s) {
     extern char *yytext; // `yytext` é definido pelo Flex
     extern int yylineno; // `yylineno` é definido pelo Flex com a opção %option yylineno
     fprintf(stderr, "Erro de sintaxe na linha %d: %s próximo de '%s'\n", yylineno, s, yytext);
+}
+
+void checkVariableDeclared(char *name) {
+    for (int i = 0; i < symbolCount; i++) {
+        if (strcmp(symbolTable[i].name, name) == 0) {
+            return;
+        }
+    }
+    char error[100];
+    sprintf(error, "Variável '%s' não foi declarada", name);
+    semanticError(error, yylineno);
+}
+
+void checkVariableType(char *name, char *expectedType) {
+    for (int i = 0; i < symbolCount; i++) {
+        if (strcmp(symbolTable[i].name, name) == 0) {
+            if (strcmp(symbolTable[i].type, expectedType) != 0) {
+                char error[100];
+                sprintf(error, "Tipo incompatível para variável '%s'", name);
+                semanticError(error, yylineno);
+            }
+            return;
+        }
+    }
+}
+
+void semanticError(const char *message, int line) {
+    fprintf(stderr, "Erro semântico na linha %d: %s\n", line, message);
+    exit(1);
 }
 
 int main(int argc, char *argv[]) {
