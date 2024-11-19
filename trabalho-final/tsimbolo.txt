@@ -1,5 +1,12 @@
-0 "fmt" import
-1 a int
-2 b int
-3 c int
-4 x int
++-----------------+-----------+--------+-------------+--------+----------+------------+
+| Nome            | Tipo      | Linha  | Inicializado| Tamanho| Escopo   | Categoria  |
++-----------------+-----------+--------+-------------+--------+----------+------------+
+| "fmt"           | import    | 0      | Não        | 0      | global   | import     |
+| "asd"           | import    | 1      | Não        | 0      | global   | import     |
+| a               | int       | 2      | Não        | 4      | local    | variável  |
+| b               | int       | 3      | Sim         | 4      | local    | variável  |
+|                 |           | 0      | Não        | 0      | local    | variável  |
+| x               | int       | 5      | Sim         | 4      | local    | variável  |
+| i               | int       | 6      | Não        | 4      | local    | variável  |
+|                 |           | 0      | Não        | 0      | local    | variável  |
++-----------------+-----------+--------+-------------+--------+----------+------------+
