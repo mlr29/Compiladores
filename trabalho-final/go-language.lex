@@ -32,24 +32,30 @@ FUNC        "func"
 <COMMENT>(.|\n)         ;  /* Ignora o conteúdo dos comentários */
 <COMMENT><<EOF>>        { fprintf(out, "(%d, ERROR, \"/*\")\n", linha); return ERROR; }
 
-"import" { yylval.str = strdup(yytext); return IMPORT; }
+"if"        { return IF; }
+"else"      { return ELSE; }
+"for"       { return FOR; }
+"++"        { return INC; }
+":="        { return DECLARE_ASSIGN; }
+"<"         { return LT; }
+">"         { return GT; }
+"<="        { return LE; }
+">="        { return GE; }
+"=="        { return EQ; }
+"!="        { return NE; }
 
-"package" { return PACKAGE; }
+"import"    { yylval.str = strdup(yytext); return IMPORT; }
+"package"   { return PACKAGE; }
+"func"      { return FUNC; }
+"var"       { return VAR; }
+"int"       { yylval.str = strdup(yytext); return INT_TYPE; }
 
-"func" { return FUNC; }
+"+"|"-"|"*"|"/"|"="|";"|","|"("|")"|"{"|"}"|":"|"." { return yytext[0]; }
 
-"var" { return VAR; }
-
-"int" { yylval.str = strdup(yytext); return INT_TYPE;}
-
-"+"|"-"|"*"|"/"|"<"|"<="|">"|">="|"=="|"!="|"="|";"|","|"("|")"|"["|"]"|"{"|"}"|":"|"." { return yytext[0]; }
-
-break|case|chan|const|continue|default|defer|else|fallthrough|for|go|goto|if|interface|map|range|select {yylval.str = strdup(yytext); return KEYWORD; }
+break|case|chan|const|continue|default|defer|fallthrough|go|goto|interface|map|range|select {yylval.str = strdup(yytext); return KEYWORD; }
 
 {STRING}                { yylval.str = strdup(yytext); return STRING; }
-
-{WHITESPACE}+|{quebra}|{TAB}+  ; /* Ignora espaços em branco, quebras de linha e tabulações */
-
+{WHITESPACE}+|{quebra}|{TAB}+  ; /* Ignora espaços em branco */
 {digit}+                { yylval.num = atoi(yytext); return NUMBER_INT; }
 {digit}+\.{digit}+      { yylval.num = atoi(yytext); return NUMBER_FLOAT; }
 {ID}                    { yylval.str = strdup(yytext); return IDENTIFIER; }

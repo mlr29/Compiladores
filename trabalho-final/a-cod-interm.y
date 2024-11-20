@@ -10,6 +10,9 @@ void generateIntermediateCode(const char *code);
 void checkVariableDeclared(char *name);
 void checkVariableType(char *name, char *expectedType);
 void semanticError(const char *message, int line);
+void updateSymbolInitialization(char *name);
+
+int labelCount = 0;  // Contador para labels únicos
 
 extern int yylineno;
 
@@ -20,6 +23,9 @@ typedef struct {
     char *type;
     int line;
     int initialized;
+    int size;          // Tamanho do tipo
+    char *scope;       // Escopo (global, local, etc)
+    char *category;    // Variável, função, import, etc
 } Symbol;
 
 #define MAX_SYMBOLS 100
@@ -36,12 +42,25 @@ int intermediateLine = 0;
 %union {
     int num;
     char *str;
+    struct {
+        char *type;
+        int value;
+        float fvalue;
+    } expr;
 }
 
 %token <num> NUMBER_INT NUMBER_FLOAT
-%token PACKAGE FUNC VAR 
+%token PACKAGE FUNC VAR IF ELSE FOR
 %token <str> IDENTIFIER STRING KEYWORD INT_TYPE IMPORT
+%token INC DECLARE_ASSIGN LT GT LE GE EQ NE
 %token ERROR
+
+%type <expr> expr condition
+%type <str> comparison_op
+
+%left LT GT LE GE EQ NE
+%left '+' '-'
+%left '*' '/'
 
 %debug
 
@@ -72,6 +91,9 @@ stmt:
     int_var
     | atr_var_int
     | println_stmt
+    | if_stmt
+    | if_else_stmt
+    | for_stmt
     ;
 
 int_var:
@@ -83,13 +105,7 @@ atr_var_int:
     {
         checkVariableDeclared($1);
         checkVariableType($1, "int");
-        
-        for (int i = 0; i < symbolCount; i++) {
-            if (strcmp(symbolTable[i].name, $1) == 0) {
-                symbolTable[i].initialized = 1;
-                break;
-            }
-        }
+        updateSymbolInitialization($1);
         
         printf("Reconhecido: atribuicao %s = %d\n", $1, $3);
         char code[100];
@@ -120,24 +136,212 @@ println_stmt:
     }
     ;
 
+if_stmt:
+    IF condition '{' stmt_list '}'
+    {
+        char label[20];
+        sprintf(label, "L%d", labelCount++);
+        generateIntermediateCode("if_start:");
+        generateIntermediateCode($2.type);
+        generateIntermediateCode("jump_if_false end_if");
+        generateIntermediateCode("end_if:");
+    }
+    ;
+
+if_else_stmt:
+    IF condition '{' stmt_list '}' ELSE '{' stmt_list '}'
+    {
+        char labelIf[20], labelElse[20];
+        sprintf(labelIf, "L%d", labelCount++);
+        sprintf(labelElse, "L%d", labelCount++);
+        generateIntermediateCode("if_start:");
+        generateIntermediateCode($2.type);
+        generateIntermediateCode("jump_if_false else");
+        generateIntermediateCode("else:");
+        generateIntermediateCode("end_if:");
+    }
+    ;
+
+for_stmt:
+    FOR for_init condition ';' for_update '{' stmt_list '}'
+    {
+        generateIntermediateCode("for_start:");
+        generateIntermediateCode("check_condition");
+        generateIntermediateCode("jump_if_false end_for");
+        generateIntermediateCode("update");
+        generateIntermediateCode("jump for_start");
+        generateIntermediateCode("end_for:");
+    }
+    ;
+
+for_init:
+    IDENTIFIER DECLARE_ASSIGN NUMBER_INT ';'
+    {
+        char code[100];
+        sprintf(code, "init %s = %d", $1, $3);
+        generateIntermediateCode(code);
+    }
+    ;
+
+for_update:
+    IDENTIFIER INC
+    {
+        char code[100];
+        sprintf(code, "%s = %s + 1", $1, $1);
+        generateIntermediateCode(code);
+    }
+    ;
+
+condition:
+    expr comparison_op expr
+    {
+        char code[100];
+        sprintf(code, "compare %d %s %d", $1.value, $2, $3.value);
+        generateIntermediateCode(code);
+    }
+    ;
+
+comparison_op:
+    LT { $$ = "<"; }
+    | GT { $$ = ">"; }
+    | LE { $$ = "<="; }
+    | GE { $$ = ">="; }
+    | EQ { $$ = "=="; }
+    | NE { $$ = "!="; }
+    ;
+
+expr:
+    NUMBER_INT
+    {
+        $$.type = "int";
+        $$.value = $1;
+    }
+    | NUMBER_FLOAT
+    {
+        $$.type = "float";
+        $$.fvalue = $1;
+    }
+    | IDENTIFIER
+    {
+        checkVariableDeclared($1);
+        for (int i = 0; i < symbolCount; i++) {
+            if (strcmp(symbolTable[i].name, $1) == 0) {
+                $$.type = symbolTable[i].type;
+                break;
+            }
+        }
+    }
+    | expr '+' expr
+    {
+        if (strcmp($1.type, $3.type) != 0) {
+            semanticError("Tipos incompatíveis em operação de soma", yylineno);
+        }
+        $$.type = $1.type;
+        if (strcmp($1.type, "int") == 0) {
+            $$.value = $1.value + $3.value;
+        } else {
+            $$.fvalue = $1.fvalue + $3.fvalue;
+        }
+    }
+    | expr '-' expr
+    {
+        if (strcmp($1.type, $3.type) != 0) {
+            semanticError("Tipos incompatíveis em operação de subtração", yylineno);
+        }
+        $$.type = $1.type;
+        if (strcmp($1.type, "int") == 0) {
+            $$.value = $1.value - $3.value;
+        } else {
+            $$.fvalue = $1.fvalue - $3.fvalue;
+        }
+    }
+    | expr '*' expr
+    {
+        if (strcmp($1.type, $3.type) != 0) {
+            semanticError("Tipos incompatíveis em operação de multiplicação", yylineno);
+        }
+        $$.type = $1.type;
+        if (strcmp($1.type, "int") == 0) {
+            $$.value = $1.value * $3.value;
+        } else {
+            $$.fvalue = $1.fvalue * $3.fvalue;
+        }
+    }
+    | expr '/' expr
+    {
+        if (strcmp($1.type, $3.type) != 0) {
+            semanticError("Tipos incompatíveis em operação de divisão", yylineno);
+        }
+        if ($3.value == 0 || $3.fvalue == 0.0) {
+            semanticError("Divisão por zero", yylineno);
+        }
+        $$.type = $1.type;
+        if (strcmp($1.type, "int") == 0) {
+            $$.value = $1.value / $3.value;
+        } else {
+            $$.fvalue = $1.fvalue / $3.fvalue;
+        }
+    }
+    | '(' expr ')'
+    {
+        $$ = $2;
+    }
+    ;
+
 %%
 
 /* Função para adicionar símbolos à tabela */
 void addSymbol(char *name, char *type, int line) {
-    FILE *a = fopen("tsimbolo.txt", "a");
-
-    if (a) {
-        fprintf(a, "%d %s %s\n", line, name, type);
-        fclose(a);
-    } else {
-        printf("erro ao abrir tabela de simbolos.");
-    }
+    FILE *a = fopen("tsimbolo.txt", "w");
 
     if (symbolCount < MAX_SYMBOLS) {
         symbolTable[symbolCount].name = strdup(name);
         symbolTable[symbolCount].type = strdup(type);
         symbolTable[symbolCount].line = line;
         symbolTable[symbolCount].initialized = 0;
+        
+        // Define o tamanho baseado no tipo
+        if (strcmp(type, "int") == 0) {
+            symbolTable[symbolCount].size = 4;  // 4 bytes para int
+        } else if (strcmp(type, "float") == 0) {
+            symbolTable[symbolCount].size = 8;  // 8 bytes para float
+        } else {
+            symbolTable[symbolCount].size = 0;  // 0 para outros tipos
+        }
+        
+        // Define a categoria
+        if (strcmp(type, "import") == 0) {
+            symbolTable[symbolCount].category = "import";
+            symbolTable[symbolCount].scope = "global";
+        } else {
+            symbolTable[symbolCount].category = "variável";
+            symbolTable[symbolCount].scope = "local";
+        }
+
+        // Escreve no arquivo com o novo formato
+        if (a) {
+            fprintf(a, "+-----------------+-----------+--------+-------------+--------+----------+------------+\n");
+            fprintf(a, "| Nome            | Tipo      | Linha  | Inicializado| Tamanho| Escopo   | Categoria  |\n");
+            fprintf(a, "+-----------------+-----------+--------+-------------+--------+----------+------------+\n");
+            
+            for (int i = 0; i <= symbolCount; i++) {
+                fprintf(a, "| %-15s | %-9s | %-6d | %-11s | %-6d | %-8s | %-10s |\n",
+                    symbolTable[i].name,
+                    symbolTable[i].type,
+                    symbolTable[i].line,
+                    symbolTable[i].initialized ? "Sim" : "Não",
+                    symbolTable[i].size,
+                    symbolTable[i].scope,
+                    symbolTable[i].category
+                );
+            }
+            
+            fprintf(a, "+-----------------+-----------+--------+-------------+--------+----------+------------+\n");
+            fclose(a);
+        } else {
+            printf("erro ao abrir tabela de simbolos.");
+        }
+
         symbolCount++;
         nId++;
     } else {
@@ -188,6 +392,19 @@ void checkVariableType(char *name, char *expectedType) {
 void semanticError(const char *message, int line) {
     fprintf(stderr, "Erro semântico na linha %d: %s\n", line, message);
     exit(1);
+}
+
+// Adicione esta função para atualizar o status de inicialização
+void updateSymbolInitialization(char *name) {
+    for (int i = 0; i < symbolCount; i++) {
+        if (strcmp(symbolTable[i].name, name) == 0) {
+            symbolTable[i].initialized = 1;
+            
+            // Reescreve a tabela para atualizar o status
+            addSymbol("", "", 0);  // Força reescrita da tabela
+            break;
+        }
+    }
 }
 
 int main(int argc, char *argv[]) {

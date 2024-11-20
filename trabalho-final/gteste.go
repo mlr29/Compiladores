@@ -2,43 +2,46 @@
 package main
 
 import "fmt"
+import "asd"
 
 func main() {
-    // Teste de declarações e inicializações
+    // Testes originais
     var a int;
     var b int;
-    var c int;
+    b = 10;
+    fmt.Println("ola mundo");
     
-    // Teste de atribuições
-    a = 10;
-    // b = 20;
-    
-    // Teste de variável não inicializada (deve gerar erro semântico)
-    // fmt.Println(c);  // Descomente para testar erro
-    
-    // Teste de variável não declarada (deve gerar erro semântico)
-    // d = 30;  // Descomente para testar erro
-    
-    // Teste de tipo incompatível (deve gerar erro de tipo)
+    // Novos testes
     var x int;
-    x = 3.14;  // Descomente para testar erro de tipo
+    var i int;
     
-    // Teste de if (implementação futura)
-
-    // if a > b {
-    //     fmt.Println("a é maior que b");
-    // }
+    x = 10;
     
-    // Teste de for (implementação futura)
-    // for i := 0; i < 5; i++ {
-    //     fmt.Println(i);
-    // }
+    // Teste if
+    if x > 5 {
+        fmt.Println("x é maior que 5");
+    }
     
-    // Teste de cast (implementação futura)
-    // var f float64;
-    // f = float64(a);
-
-    b = 20 + 3.14;  // Deve gerar erro: tipos incompatíveis em soma
-   
-    fmt.Println("Teste do compilador");
+    // Teste if-else
+    if x < 20 {
+        fmt.Println("x é menor que 20");
+    } else {
+        fmt.Println("x é maior ou igual a 20");
+    }
+    
+    // Teste for
+    for i := 0; i < 5; i++ {
+        fmt.Println("Iteração do loop");
+    }
+    
+    // Testes de erro (comentados)
+    // Teste de variável não inicializada
+    // fmt.Println(a);  // Deve gerar erro semântico
+    
+    // Teste de variável não declarada
+    // c = 30;  // Deve gerar erro semântico
+    
+    // Teste de tipo incompatível
+    // var y int;
+    // y = 3.14;  // Deve gerar erro de tipo
 }

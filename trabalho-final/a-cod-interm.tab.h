@@ -59,12 +59,23 @@ extern int yydebug;
     PACKAGE = 260,                 /* PACKAGE  */
     FUNC = 261,                    /* FUNC  */
     VAR = 262,                     /* VAR  */
-    IDENTIFIER = 263,              /* IDENTIFIER  */
-    STRING = 264,                  /* STRING  */
-    KEYWORD = 265,                 /* KEYWORD  */
-    INT_TYPE = 266,                /* INT_TYPE  */
-    IMPORT = 267,                  /* IMPORT  */
-    ERROR = 268                    /* ERROR  */
+    IF = 263,                      /* IF  */
+    ELSE = 264,                    /* ELSE  */
+    FOR = 265,                     /* FOR  */
+    IDENTIFIER = 266,              /* IDENTIFIER  */
+    STRING = 267,                  /* STRING  */
+    KEYWORD = 268,                 /* KEYWORD  */
+    INT_TYPE = 269,                /* INT_TYPE  */
+    IMPORT = 270,                  /* IMPORT  */
+    INC = 271,                     /* INC  */
+    DECLARE_ASSIGN = 272,          /* DECLARE_ASSIGN  */
+    LT = 273,                      /* LT  */
+    GT = 274,                      /* GT  */
+    LE = 275,                      /* LE  */
+    GE = 276,                      /* GE  */
+    EQ = 277,                      /* EQ  */
+    NE = 278,                      /* NE  */
+    ERROR = 279                    /* ERROR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -73,12 +84,17 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 36 "a-cod-interm.y"
+#line 42 "a-cod-interm.y"
 
     int num;
     char *str;
+    struct {
+        char *type;
+        int value;
+        float fvalue;
+    } expr;
 
-#line 82 "a-cod-interm.tab.h"
+#line 98 "a-cod-interm.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
