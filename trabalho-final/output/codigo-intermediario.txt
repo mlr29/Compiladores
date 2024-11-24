@@ -1,0 +1,30 @@
+		Código Intermediário Gerado
++--------------------------------+
+| b = 10                         |
+| CALL fmt.Println, "ola mundo"  |
+| x = 10                         |
+| compare 0 > 5                  |
+| CALL fmt.Println, "x é maior que 5" |
+| if_start:                      |
+| int                            |
+| jump_if_false end_if           |
+| end_if:                        |
+| compare 0 < 20                 |
+| CALL fmt.Println, "x é menor que 20" |
+| CALL fmt.Println, "x é maior ou igual a 20" |
+| if_start:                      |
+| int                            |
+| jump_if_false else             |
+| else:                          |
+| end_if:                        |
+| init i = 0                     |
+| compare 0 < 5                  |
+| i = i + 1                      |
+| CALL fmt.Println, "Iteração do loop" |
+| for_start:                     |
+| check_condition                |
+| jump_if_false end_for          |
+| update                         |
+| jump for_start                 |
+| end_for:                       |
++--------------------------------+

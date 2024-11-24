@@ -37,6 +37,30 @@ int symbolCount = 0;
 char intermediateCode[1000][100];
 int intermediateLine = 0;
 
+extern void init_lexer();
+extern void close_lexer();
+
+/* Arquivo para código intermediário */
+FILE *intermediate_out = NULL;
+
+void init_intermediate_code() {
+    intermediate_out = fopen("codigo-intermediario.txt", "w");
+    if (!intermediate_out) {
+        fprintf(stderr, "Erro ao criar arquivo de código intermediário\n");
+        exit(1);
+    }
+    fprintf(intermediate_out, "\t\tCódigo Intermediário Gerado\n");
+    fprintf(intermediate_out, "+--------------------------------+\n");
+}
+
+void close_intermediate_code() {
+    if (intermediate_out) {
+        fprintf(intermediate_out, "+--------------------------------+\n");
+        fclose(intermediate_out);
+        intermediate_out = NULL;
+    }
+}
+
 %}
 
 %union {
@@ -71,11 +95,11 @@ program:
     ;
 
 package_stmt:
-    PACKAGE IDENTIFIER { printf("Reconhecido: pacote %s\n", $2); }
+    PACKAGE IDENTIFIER { printf("(Análise Sintática/Semântica): reconhecido: pacote %s\n", $2); }
     ;
 
 import_stmt:
-    import_stmt IMPORT STRING { addSymbol($3, $2, nId); printf("Reconhecido: import %s\n", $3); }
+    import_stmt IMPORT STRING { addSymbol($3, $2, nId); printf("(Análise Sintática/Semântica): reconhecido: import %s\n", $3); }
     | ;
 
 func_main_stmt:
@@ -97,7 +121,7 @@ stmt:
     ;
 
 int_var:
-    VAR IDENTIFIER INT_TYPE ';' { addSymbol($2, $3, nId); printf("Reconhecido: variável int %s\n", $2);}
+    VAR IDENTIFIER INT_TYPE ';' { addSymbol($2, $3, nId); printf("(Análise Sintática/Semântica): reconhecido: variável int %s\n", $2);}
     ;
 
 atr_var_int:
@@ -107,7 +131,7 @@ atr_var_int:
         checkVariableType($1, "int");
         updateSymbolInitialization($1);
         
-        printf("Reconhecido: atribuicao %s = %d\n", $1, $3);
+        printf("(Análise Sintática/Semântica): reconhecido: atribuicao %s = %d\n", $1, $3);
         char code[100];
         sprintf(code, "%s = %d", $1, $3);
         generateIntermediateCode(code);
@@ -129,7 +153,7 @@ println_stmt:
             semanticError("Pacote 'fmt' não importado", yylineno);
         }
         
-        printf("Reconhecido: chamada de %s.%s\n", $1, $3);
+        printf("(Análise Sintática/Semântica): reconhecido: chamada de %s.%s\n", $1, $3);
         char code[100];
         sprintf(code, "CALL %s.%s, %s", $1, $3, $5);
         generateIntermediateCode(code);
@@ -353,7 +377,10 @@ void addSymbol(char *name, char *type, int line) {
 void generateIntermediateCode(const char *code) {
     if (intermediateLine < 1000) {
         strcpy(intermediateCode[intermediateLine++], code);
-        printf("Código intermediário gerado: %s\n", code);
+        if (intermediate_out) {
+            fprintf(intermediate_out, "| %-30s |\n", code);
+        }
+        printf("(Código intermediário): %s\n", code);
     } else {
         fprintf(stderr, "Erro: buffer de código intermediário cheio\n");
     }
@@ -419,13 +446,15 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    init_lexer();  // Inicializa o analisador léxico
+    init_intermediate_code();  // Inicializa o arquivo de código intermediário
+    
     int result = yyparse();
 
-    /* Imprimir código intermediário */
-    printf("\nCódigo intermediário gerado:\n");
-    for (int i = 0; i < intermediateLine; i++) {
-        printf("%s\n", intermediateCode[i]);
-    }
 
+    close_lexer();  // Fecha o arquivo de tokens
+    close_intermediate_code();  // Fecha o arquivo de código intermediário
+    fclose(yyin);   // Fecha o arquivo de entrada
+    
     return result;
 }

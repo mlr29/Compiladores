@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "a-cod-interm.y"
+#line 1 "a-sin-sem-cod-interm.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -107,8 +107,32 @@ int symbolCount = 0;
 char intermediateCode[1000][100];
 int intermediateLine = 0;
 
+extern void init_lexer();
+extern void close_lexer();
 
-#line 112 "a-cod-interm.tab.c"
+/* Arquivo para código intermediário */
+FILE *intermediate_out = NULL;
+
+void init_intermediate_code() {
+    intermediate_out = fopen("codigo-intermediario.txt", "w");
+    if (!intermediate_out) {
+        fprintf(stderr, "Erro ao criar arquivo de código intermediário\n");
+        exit(1);
+    }
+    fprintf(intermediate_out, "\t\tCódigo Intermediário Gerado\n");
+    fprintf(intermediate_out, "+--------------------------------+\n");
+}
+
+void close_intermediate_code() {
+    if (intermediate_out) {
+        fprintf(intermediate_out, "+--------------------------------+\n");
+        fclose(intermediate_out);
+        intermediate_out = NULL;
+    }
+}
+
+
+#line 136 "output/a-sin-sem-cod-interm.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -131,7 +155,7 @@ int intermediateLine = 0;
 #  endif
 # endif
 
-#include "a-cod-interm.tab.h"
+#include "a-sin-sem-cod-interm.tab.h"
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -577,10 +601,10 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    70,    70,    74,    78,    79,    82,    86,    87,    91,
-      92,    93,    94,    95,    96,   100,   104,   118,   140,   152,
-     166,   178,   187,   196,   205,   206,   207,   208,   209,   210,
-     214,   219,   224,   234,   246,   258,   270,   285
+       0,    94,    94,    98,   102,   103,   106,   110,   111,   115,
+     116,   117,   118,   119,   120,   124,   128,   142,   164,   176,
+     190,   202,   211,   220,   229,   230,   231,   232,   233,   234,
+     238,   243,   248,   258,   270,   282,   294,   309
 };
 #endif
 
@@ -1192,40 +1216,40 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* package_stmt: PACKAGE IDENTIFIER  */
-#line 74 "a-cod-interm.y"
-                       { printf("Reconhecido: pacote %s\n", (yyvsp[0].str)); }
-#line 1198 "a-cod-interm.tab.c"
+#line 98 "a-sin-sem-cod-interm.y"
+                       { printf("(Análise Sintática/Semântica): reconhecido: pacote %s\n", (yyvsp[0].str)); }
+#line 1222 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 4: /* import_stmt: import_stmt IMPORT STRING  */
-#line 78 "a-cod-interm.y"
-                              { addSymbol((yyvsp[0].str), (yyvsp[-1].str), nId); printf("Reconhecido: import %s\n", (yyvsp[0].str)); }
-#line 1204 "a-cod-interm.tab.c"
+#line 102 "a-sin-sem-cod-interm.y"
+                              { addSymbol((yyvsp[0].str), (yyvsp[-1].str), nId); printf("(Análise Sintática/Semântica): reconhecido: import %s\n", (yyvsp[0].str)); }
+#line 1228 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 15: /* int_var: VAR IDENTIFIER INT_TYPE ';'  */
-#line 100 "a-cod-interm.y"
-                                { addSymbol((yyvsp[-2].str), (yyvsp[-1].str), nId); printf("Reconhecido: variável int %s\n", (yyvsp[-2].str));}
-#line 1210 "a-cod-interm.tab.c"
+#line 124 "a-sin-sem-cod-interm.y"
+                                { addSymbol((yyvsp[-2].str), (yyvsp[-1].str), nId); printf("(Análise Sintática/Semântica): reconhecido: variável int %s\n", (yyvsp[-2].str));}
+#line 1234 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 16: /* atr_var_int: IDENTIFIER '=' NUMBER_INT ';'  */
-#line 105 "a-cod-interm.y"
+#line 129 "a-sin-sem-cod-interm.y"
     {
         checkVariableDeclared((yyvsp[-3].str));
         checkVariableType((yyvsp[-3].str), "int");
         updateSymbolInitialization((yyvsp[-3].str));
         
-        printf("Reconhecido: atribuicao %s = %d\n", (yyvsp[-3].str), (yyvsp[-1].num));
+        printf("(Análise Sintática/Semântica): reconhecido: atribuicao %s = %d\n", (yyvsp[-3].str), (yyvsp[-1].num));
         char code[100];
         sprintf(code, "%s = %d", (yyvsp[-3].str), (yyvsp[-1].num));
         generateIntermediateCode(code);
     }
-#line 1225 "a-cod-interm.tab.c"
+#line 1249 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 17: /* println_stmt: IDENTIFIER '.' IDENTIFIER '(' STRING ')' ';'  */
-#line 119 "a-cod-interm.y"
+#line 143 "a-sin-sem-cod-interm.y"
     {
         int fmtImported = 0;
         for (int i = 0; i < symbolCount; i++) {
@@ -1239,16 +1263,16 @@ yyreduce:
             semanticError("Pacote 'fmt' não importado", yylineno);
         }
         
-        printf("Reconhecido: chamada de %s.%s\n", (yyvsp[-6].str), (yyvsp[-4].str));
+        printf("(Análise Sintática/Semântica): reconhecido: chamada de %s.%s\n", (yyvsp[-6].str), (yyvsp[-4].str));
         char code[100];
         sprintf(code, "CALL %s.%s, %s", (yyvsp[-6].str), (yyvsp[-4].str), (yyvsp[-2].str));
         generateIntermediateCode(code);
     }
-#line 1248 "a-cod-interm.tab.c"
+#line 1272 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 18: /* if_stmt: IF condition '{' stmt_list '}'  */
-#line 141 "a-cod-interm.y"
+#line 165 "a-sin-sem-cod-interm.y"
     {
         char label[20];
         sprintf(label, "L%d", labelCount++);
@@ -1257,11 +1281,11 @@ yyreduce:
         generateIntermediateCode("jump_if_false end_if");
         generateIntermediateCode("end_if:");
     }
-#line 1261 "a-cod-interm.tab.c"
+#line 1285 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 19: /* if_else_stmt: IF condition '{' stmt_list '}' ELSE '{' stmt_list '}'  */
-#line 153 "a-cod-interm.y"
+#line 177 "a-sin-sem-cod-interm.y"
     {
         char labelIf[20], labelElse[20];
         sprintf(labelIf, "L%d", labelCount++);
@@ -1272,11 +1296,11 @@ yyreduce:
         generateIntermediateCode("else:");
         generateIntermediateCode("end_if:");
     }
-#line 1276 "a-cod-interm.tab.c"
+#line 1300 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 20: /* for_stmt: FOR for_init condition ';' for_update '{' stmt_list '}'  */
-#line 167 "a-cod-interm.y"
+#line 191 "a-sin-sem-cod-interm.y"
     {
         generateIntermediateCode("for_start:");
         generateIntermediateCode("check_condition");
@@ -1285,95 +1309,95 @@ yyreduce:
         generateIntermediateCode("jump for_start");
         generateIntermediateCode("end_for:");
     }
-#line 1289 "a-cod-interm.tab.c"
+#line 1313 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 21: /* for_init: IDENTIFIER DECLARE_ASSIGN NUMBER_INT ';'  */
-#line 179 "a-cod-interm.y"
+#line 203 "a-sin-sem-cod-interm.y"
     {
         char code[100];
         sprintf(code, "init %s = %d", (yyvsp[-3].str), (yyvsp[-1].num));
         generateIntermediateCode(code);
     }
-#line 1299 "a-cod-interm.tab.c"
+#line 1323 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 22: /* for_update: IDENTIFIER INC  */
-#line 188 "a-cod-interm.y"
+#line 212 "a-sin-sem-cod-interm.y"
     {
         char code[100];
         sprintf(code, "%s = %s + 1", (yyvsp[-1].str), (yyvsp[-1].str));
         generateIntermediateCode(code);
     }
-#line 1309 "a-cod-interm.tab.c"
+#line 1333 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 23: /* condition: expr comparison_op expr  */
-#line 197 "a-cod-interm.y"
+#line 221 "a-sin-sem-cod-interm.y"
     {
         char code[100];
         sprintf(code, "compare %d %s %d", (yyvsp[-2].expr).value, (yyvsp[-1].str), (yyvsp[0].expr).value);
         generateIntermediateCode(code);
     }
-#line 1319 "a-cod-interm.tab.c"
+#line 1343 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 24: /* comparison_op: LT  */
-#line 205 "a-cod-interm.y"
+#line 229 "a-sin-sem-cod-interm.y"
        { (yyval.str) = "<"; }
-#line 1325 "a-cod-interm.tab.c"
+#line 1349 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 25: /* comparison_op: GT  */
-#line 206 "a-cod-interm.y"
+#line 230 "a-sin-sem-cod-interm.y"
          { (yyval.str) = ">"; }
-#line 1331 "a-cod-interm.tab.c"
+#line 1355 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 26: /* comparison_op: LE  */
-#line 207 "a-cod-interm.y"
+#line 231 "a-sin-sem-cod-interm.y"
          { (yyval.str) = "<="; }
-#line 1337 "a-cod-interm.tab.c"
+#line 1361 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 27: /* comparison_op: GE  */
-#line 208 "a-cod-interm.y"
+#line 232 "a-sin-sem-cod-interm.y"
          { (yyval.str) = ">="; }
-#line 1343 "a-cod-interm.tab.c"
+#line 1367 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 28: /* comparison_op: EQ  */
-#line 209 "a-cod-interm.y"
+#line 233 "a-sin-sem-cod-interm.y"
          { (yyval.str) = "=="; }
-#line 1349 "a-cod-interm.tab.c"
+#line 1373 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 29: /* comparison_op: NE  */
-#line 210 "a-cod-interm.y"
+#line 234 "a-sin-sem-cod-interm.y"
          { (yyval.str) = "!="; }
-#line 1355 "a-cod-interm.tab.c"
+#line 1379 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 30: /* expr: NUMBER_INT  */
-#line 215 "a-cod-interm.y"
+#line 239 "a-sin-sem-cod-interm.y"
     {
         (yyval.expr).type = "int";
         (yyval.expr).value = (yyvsp[0].num);
     }
-#line 1364 "a-cod-interm.tab.c"
+#line 1388 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 31: /* expr: NUMBER_FLOAT  */
-#line 220 "a-cod-interm.y"
+#line 244 "a-sin-sem-cod-interm.y"
     {
         (yyval.expr).type = "float";
         (yyval.expr).fvalue = (yyvsp[0].num);
     }
-#line 1373 "a-cod-interm.tab.c"
+#line 1397 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 32: /* expr: IDENTIFIER  */
-#line 225 "a-cod-interm.y"
+#line 249 "a-sin-sem-cod-interm.y"
     {
         checkVariableDeclared((yyvsp[0].str));
         for (int i = 0; i < symbolCount; i++) {
@@ -1383,11 +1407,11 @@ yyreduce:
             }
         }
     }
-#line 1387 "a-cod-interm.tab.c"
+#line 1411 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 33: /* expr: expr '+' expr  */
-#line 235 "a-cod-interm.y"
+#line 259 "a-sin-sem-cod-interm.y"
     {
         if (strcmp((yyvsp[-2].expr).type, (yyvsp[0].expr).type) != 0) {
             semanticError("Tipos incompatíveis em operação de soma", yylineno);
@@ -1399,11 +1423,11 @@ yyreduce:
             (yyval.expr).fvalue = (yyvsp[-2].expr).fvalue + (yyvsp[0].expr).fvalue;
         }
     }
-#line 1403 "a-cod-interm.tab.c"
+#line 1427 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 34: /* expr: expr '-' expr  */
-#line 247 "a-cod-interm.y"
+#line 271 "a-sin-sem-cod-interm.y"
     {
         if (strcmp((yyvsp[-2].expr).type, (yyvsp[0].expr).type) != 0) {
             semanticError("Tipos incompatíveis em operação de subtração", yylineno);
@@ -1415,11 +1439,11 @@ yyreduce:
             (yyval.expr).fvalue = (yyvsp[-2].expr).fvalue - (yyvsp[0].expr).fvalue;
         }
     }
-#line 1419 "a-cod-interm.tab.c"
+#line 1443 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 35: /* expr: expr '*' expr  */
-#line 259 "a-cod-interm.y"
+#line 283 "a-sin-sem-cod-interm.y"
     {
         if (strcmp((yyvsp[-2].expr).type, (yyvsp[0].expr).type) != 0) {
             semanticError("Tipos incompatíveis em operação de multiplicação", yylineno);
@@ -1431,11 +1455,11 @@ yyreduce:
             (yyval.expr).fvalue = (yyvsp[-2].expr).fvalue * (yyvsp[0].expr).fvalue;
         }
     }
-#line 1435 "a-cod-interm.tab.c"
+#line 1459 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 36: /* expr: expr '/' expr  */
-#line 271 "a-cod-interm.y"
+#line 295 "a-sin-sem-cod-interm.y"
     {
         if (strcmp((yyvsp[-2].expr).type, (yyvsp[0].expr).type) != 0) {
             semanticError("Tipos incompatíveis em operação de divisão", yylineno);
@@ -1450,19 +1474,19 @@ yyreduce:
             (yyval.expr).fvalue = (yyvsp[-2].expr).fvalue / (yyvsp[0].expr).fvalue;
         }
     }
-#line 1454 "a-cod-interm.tab.c"
+#line 1478 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 37: /* expr: '(' expr ')'  */
-#line 286 "a-cod-interm.y"
+#line 310 "a-sin-sem-cod-interm.y"
     {
         (yyval.expr) = (yyvsp[-1].expr);
     }
-#line 1462 "a-cod-interm.tab.c"
+#line 1486 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
 
-#line 1466 "a-cod-interm.tab.c"
+#line 1490 "output/a-sin-sem-cod-interm.tab.c"
 
       default: break;
     }
@@ -1655,7 +1679,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 291 "a-cod-interm.y"
+#line 315 "a-sin-sem-cod-interm.y"
 
 
 /* Função para adicionar símbolos à tabela */
@@ -1721,7 +1745,10 @@ void addSymbol(char *name, char *type, int line) {
 void generateIntermediateCode(const char *code) {
     if (intermediateLine < 1000) {
         strcpy(intermediateCode[intermediateLine++], code);
-        printf("Código intermediário gerado: %s\n", code);
+        if (intermediate_out) {
+            fprintf(intermediate_out, "| %-30s |\n", code);
+        }
+        printf("(Código intermediário): %s\n", code);
     } else {
         fprintf(stderr, "Erro: buffer de código intermediário cheio\n");
     }
@@ -1787,13 +1814,15 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    init_lexer();  // Inicializa o analisador léxico
+    init_intermediate_code();  // Inicializa o arquivo de código intermediário
+    
     int result = yyparse();
 
-    /* Imprimir código intermediário */
-    printf("\nCódigo intermediário gerado:\n");
-    for (int i = 0; i < intermediateLine; i++) {
-        printf("%s\n", intermediateCode[i]);
-    }
 
+    close_lexer();  // Fecha o arquivo de tokens
+    close_intermediate_code();  // Fecha o arquivo de código intermediário
+    fclose(yyin);   // Fecha o arquivo de entrada
+    
     return result;
 }

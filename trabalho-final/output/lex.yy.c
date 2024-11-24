@@ -1,5 +1,6 @@
+#line 2 "output/lex.yy.c"
 
-#line 3 "lex.yy.c"
+#line 4 "output/lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -548,18 +549,47 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "go-language.lex"
-#line 2 "go-language.lex"
+#line 1 "a-lexica.lex"
+#line 2 "a-lexica.lex"
 #include <string.h>
 #include <stdio.h>
-#include "a-cod-interm.tab.h" 
+#include "a-sin-sem-cod-interm.tab.h" 
 
-FILE *out;
+FILE *out = NULL;
 int linha;
-#line 560 "lex.yy.c"
+
+void init_lexer() {
+    out = fopen("tokens.txt", "w");
+    if (!out) {
+        fprintf(stderr, "Erro ao criar arquivo de tokens\n");
+        exit(1);
+    }
+    fprintf(out, "\t\tLista de Tokens Reconhecidos\n");
+    fprintf(out, "+-----------------+-----------------+----------+\n");
+    fprintf(out, "| Linha          | Token           | Lexema   |\n");
+    fprintf(out, "+-----------------+-----------------+----------+\n");
+}
+
+void close_lexer() {
+    if (out) {
+        fprintf(out, "+-----------------+-----------------+----------+\n");
+        fclose(out);
+        out = NULL;
+    }
+}
+
+void print_token(const char* token, const char* lexema) {
+    if (!out) {
+        init_lexer();
+    }
+    fprintf(out, "| %-15d | %-15s | %-8s |\n", yylineno, token, lexema);
+}
+
+#line 589 "output/lex.yy.c"
+#define YY_NO_INPUT 1
 
 /* Definições de padrões */
-#line 563 "lex.yy.c"
+#line 593 "output/lex.yy.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -621,8 +651,6 @@ extern int yywrap ( void );
 #endif
 
 #ifndef YY_NO_UNPUT
-    
-    static void yyunput ( int c, char *buf_ptr  );
     
 #endif
 
@@ -778,10 +806,10 @@ YY_DECL
 		}
 
 	{
-#line 24 "go-language.lex"
+#line 54 "a-lexica.lex"
 
 
-#line 785 "lex.yy.c"
+#line 813 "output/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -850,168 +878,177 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 26 "go-language.lex"
+#line 56 "a-lexica.lex"
 { BEGIN(LINE_COMMENT); }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 27 "go-language.lex"
+#line 57 "a-lexica.lex"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 28 "go-language.lex"
+#line 58 "a-lexica.lex"
 ; /* Ignora tudo até o fim da linha */
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 30 "go-language.lex"
+#line 60 "a-lexica.lex"
 { linha = yylineno; BEGIN(COMMENT); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 31 "go-language.lex"
+#line 61 "a-lexica.lex"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 32 "go-language.lex"
+#line 62 "a-lexica.lex"
 ;  /* Ignora o conteúdo dos comentários */
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-#line 33 "go-language.lex"
-{ fprintf(out, "(%d, ERROR, \"/*\")\n", linha); return ERROR; }
+#line 63 "a-lexica.lex"
+{ print_token("ERROR", "/*"); return ERROR; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 35 "go-language.lex"
-{ return IF; }
+#line 65 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("IF", yytext); return IF; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 36 "go-language.lex"
-{ return ELSE; }
+#line 66 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("ELSE", yytext); return ELSE; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 37 "go-language.lex"
-{ return FOR; }
+#line 67 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("FOR", yytext); return FOR; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 38 "go-language.lex"
-{ return INC; }
+#line 68 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("INC", yytext); return INC; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 39 "go-language.lex"
-{ return DECLARE_ASSIGN; }
+#line 69 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("DECLARE_ASSIGN", yytext); return DECLARE_ASSIGN; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 40 "go-language.lex"
-{ return LT; }
+#line 70 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("LT", yytext); return LT; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 41 "go-language.lex"
-{ return GT; }
+#line 71 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("GT", yytext); return GT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 42 "go-language.lex"
-{ return LE; }
+#line 72 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("LE", yytext); return LE; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 43 "go-language.lex"
-{ return GE; }
+#line 73 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("GE", yytext); return GE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 44 "go-language.lex"
-{ return EQ; }
+#line 74 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("EQ", yytext); return EQ; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 45 "go-language.lex"
-{ return NE; }
+#line 75 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("NE", yytext); return NE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 47 "go-language.lex"
-{ yylval.str = strdup(yytext); return IMPORT; }
+#line 77 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("IMPORT", yytext); yylval.str = strdup(yytext); return IMPORT; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 48 "go-language.lex"
-{ return PACKAGE; }
+#line 78 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("PACKAGE", yytext); return PACKAGE; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 49 "go-language.lex"
-{ return FUNC; }
+#line 79 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("FUNC", yytext); return FUNC; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 50 "go-language.lex"
-{ return VAR; }
+#line 80 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("VAR", yytext); return VAR; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 51 "go-language.lex"
-{ yylval.str = strdup(yytext); return INT_TYPE; }
+#line 81 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("INT_TYPE", yytext); yylval.str = strdup(yytext); return INT_TYPE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 53 "go-language.lex"
-{ return yytext[0]; }
+#line 83 "a-lexica.lex"
+{ 
+    char token[2] = {yytext[0], '\0'};
+    print_token("OPERATOR", token); 
+    printf("(Análise Léxica): reconhecido token %s\n", token);
+    return yytext[0]; 
+}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 55 "go-language.lex"
-{yylval.str = strdup(yytext); return KEYWORD; }
+#line 90 "a-lexica.lex"
+{
+    print_token("KEYWORD", yytext);
+    yylval.str = strdup(yytext); 
+    return KEYWORD; 
+}
 	YY_BREAK
 case 25:
 /* rule 25 can match eol */
 YY_RULE_SETUP
-#line 57 "go-language.lex"
-{ yylval.str = strdup(yytext); return STRING; }
+#line 96 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("STRING", yytext); yylval.str = strdup(yytext); return STRING; }
 	YY_BREAK
 case 26:
 /* rule 26 can match eol */
 YY_RULE_SETUP
-#line 58 "go-language.lex"
+#line 97 "a-lexica.lex"
 ; /* Ignora espaços em branco */
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 59 "go-language.lex"
-{ yylval.num = atoi(yytext); return NUMBER_INT; }
+#line 98 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("NUMBER_INT", yytext); yylval.num = atoi(yytext); return NUMBER_INT; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 60 "go-language.lex"
-{ yylval.num = atoi(yytext); return NUMBER_FLOAT; }
+#line 99 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("NUMBER_FLOAT", yytext); yylval.num = atoi(yytext); return NUMBER_FLOAT; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 61 "go-language.lex"
-{ yylval.str = strdup(yytext); return IDENTIFIER; }
+#line 100 "a-lexica.lex"
+{ printf("(Análise Léxica): reconhecido token %s\n", yytext); print_token("IDENTIFIER", yytext); yylval.str = strdup(yytext); return IDENTIFIER; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 63 "go-language.lex"
-{ fprintf(out, "(%d, ERROR, \"%s\")\n", yylineno, yytext); return ERROR; }
+#line 102 "a-lexica.lex"
+{ printf("Reconhecido token de erro: %s\n", yytext); print_token("ERROR", yytext); return ERROR; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 65 "go-language.lex"
+#line 104 "a-lexica.lex"
 ECHO;
 	YY_BREAK
-#line 1015 "lex.yy.c"
+#line 1052 "output/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(LINE_COMMENT):
 	yyterminate();
@@ -1347,47 +1384,6 @@ static int yy_get_next_buffer (void)
 }
 
 #ifndef YY_NO_UNPUT
-
-    static void yyunput (int c, char * yy_bp )
-{
-	char *yy_cp;
-    
-    yy_cp = (yy_c_buf_p);
-
-	/* undo effects of setting up yytext */
-	*yy_cp = (yy_hold_char);
-
-	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-		{ /* need to shift things up to make room */
-		/* +2 for EOB chars. */
-		int number_to_move = (yy_n_chars) + 2;
-		char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
-					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
-		char *source =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
-
-		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
-			*--dest = *--source;
-
-		yy_cp += (int) (dest - source);
-		yy_bp += (int) (dest - source);
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			(yy_n_chars) = (int) YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
-
-		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
-
-	*--yy_cp = (char) c;
-
-    if ( c == '\n' ){
-        --yylineno;
-    }
-
-	(yytext_ptr) = yy_bp;
-	(yy_hold_char) = *yy_cp;
-	(yy_c_buf_p) = yy_cp;
-}
 
 #endif
 
@@ -2029,10 +2025,11 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 65 "go-language.lex"
+#line 104 "a-lexica.lex"
 
 
 int yywrap() {
+    close_lexer();
     return 1;
 }
 

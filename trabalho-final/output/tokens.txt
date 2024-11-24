@@ -1,0 +1,104 @@
+		Lista de Tokens Reconhecidos
++-----------------+-----------------+----------+
+| Linha          | Token           | Lexema   |
++-----------------+-----------------+----------+
+| 2               | PACKAGE         | package  |
+| 2               | IDENTIFIER      | main     |
+| 4               | IMPORT          | import   |
+| 4               | STRING          | "fmt"    |
+| 5               | IMPORT          | import   |
+| 5               | STRING          | "asd"    |
+| 7               | FUNC            | func     |
+| 7               | IDENTIFIER      | main     |
+| 7               | OPERATOR        | (        |
+| 7               | OPERATOR        | )        |
+| 7               | OPERATOR        | {        |
+| 9               | VAR             | var      |
+| 9               | IDENTIFIER      | a        |
+| 9               | INT_TYPE        | int      |
+| 9               | OPERATOR        | ;        |
+| 10              | VAR             | var      |
+| 10              | IDENTIFIER      | b        |
+| 10              | INT_TYPE        | int      |
+| 10              | OPERATOR        | ;        |
+| 11              | IDENTIFIER      | b        |
+| 11              | OPERATOR        | =        |
+| 11              | NUMBER_INT      | 10       |
+| 11              | OPERATOR        | ;        |
+| 12              | IDENTIFIER      | fmt      |
+| 12              | OPERATOR        | .        |
+| 12              | IDENTIFIER      | Println  |
+| 12              | OPERATOR        | (        |
+| 12              | STRING          | "ola mundo" |
+| 12              | OPERATOR        | )        |
+| 12              | OPERATOR        | ;        |
+| 15              | VAR             | var      |
+| 15              | IDENTIFIER      | x        |
+| 15              | INT_TYPE        | int      |
+| 15              | OPERATOR        | ;        |
+| 16              | VAR             | var      |
+| 16              | IDENTIFIER      | i        |
+| 16              | INT_TYPE        | int      |
+| 16              | OPERATOR        | ;        |
+| 18              | IDENTIFIER      | x        |
+| 18              | OPERATOR        | =        |
+| 18              | NUMBER_INT      | 10       |
+| 18              | OPERATOR        | ;        |
+| 21              | IF              | if       |
+| 21              | IDENTIFIER      | x        |
+| 21              | GT              | >        |
+| 21              | NUMBER_INT      | 5        |
+| 21              | OPERATOR        | {        |
+| 22              | IDENTIFIER      | fmt      |
+| 22              | OPERATOR        | .        |
+| 22              | IDENTIFIER      | Println  |
+| 22              | OPERATOR        | (        |
+| 22              | STRING          | "x é maior que 5" |
+| 22              | OPERATOR        | )        |
+| 22              | OPERATOR        | ;        |
+| 23              | OPERATOR        | }        |
+| 26              | IF              | if       |
+| 26              | IDENTIFIER      | x        |
+| 26              | LT              | <        |
+| 26              | NUMBER_INT      | 20       |
+| 26              | OPERATOR        | {        |
+| 27              | IDENTIFIER      | fmt      |
+| 27              | OPERATOR        | .        |
+| 27              | IDENTIFIER      | Println  |
+| 27              | OPERATOR        | (        |
+| 27              | STRING          | "x é menor que 20" |
+| 27              | OPERATOR        | )        |
+| 27              | OPERATOR        | ;        |
+| 28              | OPERATOR        | }        |
+| 28              | ELSE            | else     |
+| 28              | OPERATOR        | {        |
+| 29              | IDENTIFIER      | fmt      |
+| 29              | OPERATOR        | .        |
+| 29              | IDENTIFIER      | Println  |
+| 29              | OPERATOR        | (        |
+| 29              | STRING          | "x é maior ou igual a 20" |
+| 29              | OPERATOR        | )        |
+| 29              | OPERATOR        | ;        |
+| 30              | OPERATOR        | }        |
+| 33              | FOR             | for      |
+| 33              | IDENTIFIER      | i        |
+| 33              | DECLARE_ASSIGN  | :=       |
+| 33              | NUMBER_INT      | 0        |
+| 33              | OPERATOR        | ;        |
+| 33              | IDENTIFIER      | i        |
+| 33              | LT              | <        |
+| 33              | NUMBER_INT      | 5        |
+| 33              | OPERATOR        | ;        |
+| 33              | IDENTIFIER      | i        |
+| 33              | INC             | ++       |
+| 33              | OPERATOR        | {        |
+| 34              | IDENTIFIER      | fmt      |
+| 34              | OPERATOR        | .        |
+| 34              | IDENTIFIER      | Println  |
+| 34              | OPERATOR        | (        |
+| 34              | STRING          | "Iteração do loop" |
+| 34              | OPERATOR        | )        |
+| 34              | OPERATOR        | ;        |
+| 35              | OPERATOR        | }        |
+| 47              | OPERATOR        | }        |
++-----------------+-----------------+----------+

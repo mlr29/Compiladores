@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_A_COD_INTERM_TAB_H_INCLUDED
-# define YY_YY_A_COD_INTERM_TAB_H_INCLUDED
+#ifndef YY_YY_OUTPUT_A_SIN_SEM_COD_INTERM_TAB_H_INCLUDED
+# define YY_YY_OUTPUT_A_SIN_SEM_COD_INTERM_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 1
@@ -84,7 +84,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 42 "a-cod-interm.y"
+#line 66 "a-sin-sem-cod-interm.y"
 
     int num;
     char *str;
@@ -94,7 +94,7 @@ union YYSTYPE
         float fvalue;
     } expr;
 
-#line 98 "a-cod-interm.tab.h"
+#line 98 "output/a-sin-sem-cod-interm.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -109,4 +109,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_A_COD_INTERM_TAB_H_INCLUDED  */
+#endif /* !YY_YY_OUTPUT_A_SIN_SEM_COD_INTERM_TAB_H_INCLUDED  */
