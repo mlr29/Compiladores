@@ -100,5 +100,11 @@
 | 34              | OPERATOR        | )        |
 | 34              | OPERATOR        | ;        |
 | 35              | OPERATOR        | }        |
-| 47              | OPERATOR        | }        |
-+-----------------+-----------------+----------+
+| 45              | VAR             | var      |
+| 45              | IDENTIFIER      | y        |
+| 45              | INT_TYPE        | int      |
+| 45              | OPERATOR        | ;        |
+| 46              | IDENTIFIER      | y        |
+| 46              | OPERATOR        | =        |
+| 46              | NUMBER_FLOAT    | 3.14     |
+| 46              | OPERATOR        | ;        |

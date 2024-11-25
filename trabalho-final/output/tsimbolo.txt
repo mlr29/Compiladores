@@ -9,4 +9,5 @@
 | x               | int       | 5      | Sim         | 4      | local    | variável  |
 | i               | int       | 6      | Não        | 4      | local    | variável  |
 |                 |           | 0      | Não        | 0      | local    | variável  |
+| y               | int       | 8      | Não        | 4      | local    | variável  |
 +-----------------+-----------+--------+-------------+--------+----------+------------+

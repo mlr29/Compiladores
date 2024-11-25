@@ -541,16 +541,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   81
+#define YYLAST   90
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  36
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  18
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  37
+#define YYNRULES  39
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  85
+#define YYNSTATES  90
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   279
@@ -602,9 +602,9 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int16 yyrline[] =
 {
        0,    94,    94,    98,   102,   103,   106,   110,   111,   115,
-     116,   117,   118,   119,   120,   124,   128,   142,   164,   176,
-     190,   202,   211,   220,   229,   230,   231,   232,   233,   234,
-     238,   243,   248,   258,   270,   282,   294,   309
+     116,   117,   118,   119,   120,   124,   128,   139,   148,   167,
+     201,   213,   227,   239,   248,   257,   266,   267,   268,   269,
+     270,   271,   275,   280,   285,   295,   307,   319,   331,   346
 };
 #endif
 
@@ -652,15 +652,15 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       0,    15,    25,   -22,   -22,   -22,     2,    26,    33,   -22,
-      17,   -22,    18,    19,    -4,    36,    -2,    38,   -11,    20,
-      -4,   -22,   -22,   -22,   -22,   -22,   -22,    37,   -22,   -22,
-     -22,    -2,    22,    -7,    39,    -2,    51,    44,   -22,   -22,
-      27,     8,    -4,   -22,   -22,   -22,   -22,   -22,   -22,    -2,
-      -2,    -2,    -2,    -2,    55,    28,    29,    34,   -22,   -22,
-      32,    16,    16,   -22,   -22,    14,    35,    54,   -22,    57,
-      58,   -22,    50,    40,    42,    43,   -22,    -4,    45,    -4,
-      41,   -22,    47,   -22,   -22
+       0,    26,    47,   -22,   -22,   -22,     2,    37,    38,   -22,
+      20,   -22,    21,    23,    -4,    41,    -2,    42,   -11,    24,
+      -4,   -22,   -22,   -22,   -22,   -22,   -22,    43,   -22,   -22,
+     -22,    -2,    27,    -7,    44,    -2,    22,    48,   -22,   -22,
+      29,     8,    -4,   -22,   -22,   -22,   -22,   -22,   -22,    -2,
+      -2,    -2,    -2,    -2,    52,    31,    32,    33,    39,   -22,
+     -22,    35,    16,    16,   -22,   -22,    14,    36,    59,   -22,
+     -22,    34,    62,   -22,    56,    45,    49,    50,    46,   -22,
+      -4,    40,    51,    -4,    53,   -22,   -22,    54,   -22,   -22
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -670,27 +670,27 @@ static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     5,     3,     1,     0,     0,     0,     2,
        0,     4,     0,     0,     8,     0,     0,     0,     0,     0,
-       8,     9,    10,    11,    12,    13,    14,     0,    30,    31,
-      32,     0,     0,     0,     0,     0,     0,     0,     6,     7,
-       0,     0,     8,    24,    25,    26,    27,    28,    29,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,    15,    37,
-       0,    33,    34,    35,    36,    23,     0,     0,    16,     0,
-      18,    21,     0,     0,     0,     0,    22,     8,     0,     8,
-       0,    17,     0,    20,    19
+       8,     9,    10,    11,    12,    13,    14,     0,    32,    33,
+      34,     0,     0,     0,     0,     0,     0,     0,     6,     7,
+       0,     0,     8,    26,    27,    28,    29,    30,    31,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    15,
+      39,     0,    35,    36,    37,    38,    25,     0,     0,    16,
+      17,     0,    20,    23,     0,     0,     0,     0,     0,    24,
+       8,     0,     0,     8,     0,    19,    18,     0,    22,    21
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
      -22,   -22,   -22,   -22,   -22,   -20,   -22,   -22,   -22,   -22,
-     -22,   -22,   -22,   -22,   -22,    46,   -22,   -21
+     -22,   -22,   -22,   -22,   -22,    55,   -22,   -21
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
        0,     2,     3,     6,     9,    19,    20,    21,    22,    23,
-      24,    25,    26,    35,    73,    32,    53,    33
+      24,    25,    26,    35,    75,    32,    53,    33
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -700,26 +700,28 @@ static const yytype_int8 yytable[] =
 {
       39,    28,    29,    15,    16,     1,    17,    18,     7,    30,
       41,    43,    44,    45,    46,    47,    48,     8,    49,    50,
-      51,    52,    60,    36,    37,     5,     4,    31,    61,    62,
-      63,    64,    65,    49,    50,    51,    52,    10,    59,    49,
-      50,    51,    52,    51,    52,    11,    12,    27,    13,    34,
-      14,    40,    38,    42,    56,    57,    54,    80,    66,    82,
-      58,    67,    68,    69,    70,    72,    76,    75,    71,    74,
-       0,    77,    78,    83,    79,     0,     0,     0,    81,    84,
-       0,    55
+      51,    52,    61,    36,    37,    56,    57,    31,    62,    63,
+      64,    65,    66,    49,    50,    51,    52,     4,    60,    49,
+      50,    51,    52,    51,    52,    76,    77,     5,    10,    12,
+      11,    13,    27,    34,    14,    67,    38,    40,    42,    58,
+      84,    54,    59,    87,    68,    69,    70,    72,    71,    73,
+      74,    78,    79,    85,     0,     0,    80,    83,     0,    81,
+      82,     0,     0,     0,    86,    88,    89,     0,     0,     0,
+      55
 };
 
 static const yytype_int8 yycheck[] =
 {
       20,     3,     4,     7,     8,     5,    10,    11,     6,    11,
       31,    18,    19,    20,    21,    22,    23,    15,    25,    26,
-      27,    28,    42,    34,    35,     0,    11,    29,    49,    50,
+      27,    28,    42,    34,    35,     3,     4,    29,    49,    50,
       51,    52,    53,    25,    26,    27,    28,    11,    30,    25,
-      26,    27,    28,    27,    28,    12,    29,    11,    30,    11,
-      31,    14,    32,    31,     3,    11,    17,    77,     3,    79,
-      33,    33,    33,    29,    32,    11,    16,     9,    33,    12,
-      -1,    31,    30,    32,    31,    -1,    -1,    -1,    33,    32,
-      -1,    35
+      26,    27,    28,    27,    28,    11,    12,     0,    11,    29,
+      12,    30,    11,    11,    31,     3,    32,    14,    31,    11,
+      80,    17,    33,    83,    33,    33,    33,    32,    29,    33,
+      11,     9,    16,    33,    -1,    -1,    31,    31,    -1,    30,
+      30,    -1,    -1,    -1,    33,    32,    32,    -1,    -1,    -1,
+      35
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -731,28 +733,28 @@ static const yytype_int8 yystos[] =
       42,    43,    44,    45,    46,    47,    48,    11,     3,     4,
       11,    29,    51,    53,    11,    49,    34,    35,    32,    41,
       14,    53,    31,    18,    19,    20,    21,    22,    23,    25,
-      26,    27,    28,    52,    17,    51,     3,    11,    33,    30,
-      41,    53,    53,    53,    53,    53,     3,    33,    33,    29,
-      32,    33,    11,    50,    12,     9,    16,    31,    30,    31,
-      41,    33,    41,    32,    32
+      26,    27,    28,    52,    17,    51,     3,     4,    11,    33,
+      30,    41,    53,    53,    53,    53,    53,     3,    33,    33,
+      33,    29,    32,    33,    11,    50,    11,    12,     9,    16,
+      31,    30,    30,    31,    41,    33,    33,    41,    32,    32
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
        0,    36,    37,    38,    39,    39,    40,    41,    41,    42,
-      42,    42,    42,    42,    42,    43,    44,    45,    46,    47,
-      48,    49,    50,    51,    52,    52,    52,    52,    52,    52,
-      53,    53,    53,    53,    53,    53,    53,    53
+      42,    42,    42,    42,    42,    43,    44,    44,    45,    45,
+      46,    47,    48,    49,    50,    51,    52,    52,    52,    52,
+      52,    52,    53,    53,    53,    53,    53,    53,    53,    53
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     3,     2,     3,     0,     7,     2,     0,     1,
-       1,     1,     1,     1,     1,     4,     4,     7,     5,     9,
-       8,     4,     2,     3,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     3,     3,     3,     3,     3
+       1,     1,     1,     1,     1,     4,     4,     4,     7,     7,
+       5,     9,     8,     4,     2,     3,     1,     1,     1,     1,
+       1,     1,     1,     1,     1,     3,     3,     3,     3,     3
 };
 
 
@@ -1218,19 +1220,19 @@ yyreduce:
   case 3: /* package_stmt: PACKAGE IDENTIFIER  */
 #line 98 "a-sin-sem-cod-interm.y"
                        { printf("(Análise Sintática/Semântica): reconhecido: pacote %s\n", (yyvsp[0].str)); }
-#line 1222 "output/a-sin-sem-cod-interm.tab.c"
+#line 1224 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 4: /* import_stmt: import_stmt IMPORT STRING  */
 #line 102 "a-sin-sem-cod-interm.y"
                               { addSymbol((yyvsp[0].str), (yyvsp[-1].str), nId); printf("(Análise Sintática/Semântica): reconhecido: import %s\n", (yyvsp[0].str)); }
-#line 1228 "output/a-sin-sem-cod-interm.tab.c"
+#line 1230 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 15: /* int_var: VAR IDENTIFIER INT_TYPE ';'  */
 #line 124 "a-sin-sem-cod-interm.y"
                                 { addSymbol((yyvsp[-2].str), (yyvsp[-1].str), nId); printf("(Análise Sintática/Semântica): reconhecido: variável int %s\n", (yyvsp[-2].str));}
-#line 1234 "output/a-sin-sem-cod-interm.tab.c"
+#line 1236 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
   case 16: /* atr_var_int: IDENTIFIER '=' NUMBER_INT ';'  */
@@ -1245,11 +1247,21 @@ yyreduce:
         sprintf(code, "%s = %d", (yyvsp[-3].str), (yyvsp[-1].num));
         generateIntermediateCode(code);
     }
-#line 1249 "output/a-sin-sem-cod-interm.tab.c"
+#line 1251 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 17: /* println_stmt: IDENTIFIER '.' IDENTIFIER '(' STRING ')' ';'  */
-#line 143 "a-sin-sem-cod-interm.y"
+  case 17: /* atr_var_int: IDENTIFIER '=' NUMBER_FLOAT ';'  */
+#line 140 "a-sin-sem-cod-interm.y"
+    {
+        checkVariableDeclared((yyvsp[-3].str));
+        checkVariableType((yyvsp[-3].str), "int");
+        semanticError("Não é possível atribuir um valor float a uma variável int", yylineno);
+    }
+#line 1261 "output/a-sin-sem-cod-interm.tab.c"
+    break;
+
+  case 18: /* println_stmt: IDENTIFIER '.' IDENTIFIER '(' STRING ')' ';'  */
+#line 149 "a-sin-sem-cod-interm.y"
     {
         int fmtImported = 0;
         for (int i = 0; i < symbolCount; i++) {
@@ -1268,11 +1280,46 @@ yyreduce:
         sprintf(code, "CALL %s.%s, %s", (yyvsp[-6].str), (yyvsp[-4].str), (yyvsp[-2].str));
         generateIntermediateCode(code);
     }
-#line 1272 "output/a-sin-sem-cod-interm.tab.c"
+#line 1284 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 18: /* if_stmt: IF condition '{' stmt_list '}'  */
-#line 165 "a-sin-sem-cod-interm.y"
+  case 19: /* println_stmt: IDENTIFIER '.' IDENTIFIER '(' IDENTIFIER ')' ';'  */
+#line 168 "a-sin-sem-cod-interm.y"
+    {
+        // Verifica se a variável foi inicializada antes de ser usada
+        for (int i = 0; i < symbolCount; i++) {
+            if (strcmp(symbolTable[i].name, (yyvsp[-2].str)) == 0) {
+                if (!symbolTable[i].initialized) {
+                    char error[100];
+                    sprintf(error, "Variável '%s' está sendo usada sem ter sido inicializada", (yyvsp[-2].str));
+                    semanticError(error, yylineno);
+                }
+                break;
+            }
+        }
+        
+        int fmtImported = 0;
+        for (int i = 0; i < symbolCount; i++) {
+            if (strcmp(symbolTable[i].type, "import") == 0 && 
+                strstr(symbolTable[i].name, "fmt") != NULL) {
+                fmtImported = 1;
+                break;
+            }
+        }
+        if (!fmtImported) {
+            semanticError("Pacote 'fmt' não importado", yylineno);
+        }
+        
+        printf("(Análise Sintática/Semântica): reconhecido: chamada de %s.%s com variável %s\n", (yyvsp[-6].str), (yyvsp[-4].str), (yyvsp[-2].str));
+        char code[100];
+        sprintf(code, "CALL %s.%s, %s", (yyvsp[-6].str), (yyvsp[-4].str), (yyvsp[-2].str));
+        generateIntermediateCode(code);
+    }
+#line 1319 "output/a-sin-sem-cod-interm.tab.c"
+    break;
+
+  case 20: /* if_stmt: IF condition '{' stmt_list '}'  */
+#line 202 "a-sin-sem-cod-interm.y"
     {
         char label[20];
         sprintf(label, "L%d", labelCount++);
@@ -1281,11 +1328,11 @@ yyreduce:
         generateIntermediateCode("jump_if_false end_if");
         generateIntermediateCode("end_if:");
     }
-#line 1285 "output/a-sin-sem-cod-interm.tab.c"
+#line 1332 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 19: /* if_else_stmt: IF condition '{' stmt_list '}' ELSE '{' stmt_list '}'  */
-#line 177 "a-sin-sem-cod-interm.y"
+  case 21: /* if_else_stmt: IF condition '{' stmt_list '}' ELSE '{' stmt_list '}'  */
+#line 214 "a-sin-sem-cod-interm.y"
     {
         char labelIf[20], labelElse[20];
         sprintf(labelIf, "L%d", labelCount++);
@@ -1296,11 +1343,11 @@ yyreduce:
         generateIntermediateCode("else:");
         generateIntermediateCode("end_if:");
     }
-#line 1300 "output/a-sin-sem-cod-interm.tab.c"
+#line 1347 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 20: /* for_stmt: FOR for_init condition ';' for_update '{' stmt_list '}'  */
-#line 191 "a-sin-sem-cod-interm.y"
+  case 22: /* for_stmt: FOR for_init condition ';' for_update '{' stmt_list '}'  */
+#line 228 "a-sin-sem-cod-interm.y"
     {
         generateIntermediateCode("for_start:");
         generateIntermediateCode("check_condition");
@@ -1309,95 +1356,95 @@ yyreduce:
         generateIntermediateCode("jump for_start");
         generateIntermediateCode("end_for:");
     }
-#line 1313 "output/a-sin-sem-cod-interm.tab.c"
+#line 1360 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 21: /* for_init: IDENTIFIER DECLARE_ASSIGN NUMBER_INT ';'  */
-#line 203 "a-sin-sem-cod-interm.y"
+  case 23: /* for_init: IDENTIFIER DECLARE_ASSIGN NUMBER_INT ';'  */
+#line 240 "a-sin-sem-cod-interm.y"
     {
         char code[100];
         sprintf(code, "init %s = %d", (yyvsp[-3].str), (yyvsp[-1].num));
         generateIntermediateCode(code);
     }
-#line 1323 "output/a-sin-sem-cod-interm.tab.c"
+#line 1370 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 22: /* for_update: IDENTIFIER INC  */
-#line 212 "a-sin-sem-cod-interm.y"
+  case 24: /* for_update: IDENTIFIER INC  */
+#line 249 "a-sin-sem-cod-interm.y"
     {
         char code[100];
         sprintf(code, "%s = %s + 1", (yyvsp[-1].str), (yyvsp[-1].str));
         generateIntermediateCode(code);
     }
-#line 1333 "output/a-sin-sem-cod-interm.tab.c"
+#line 1380 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 23: /* condition: expr comparison_op expr  */
-#line 221 "a-sin-sem-cod-interm.y"
+  case 25: /* condition: expr comparison_op expr  */
+#line 258 "a-sin-sem-cod-interm.y"
     {
         char code[100];
         sprintf(code, "compare %d %s %d", (yyvsp[-2].expr).value, (yyvsp[-1].str), (yyvsp[0].expr).value);
         generateIntermediateCode(code);
     }
-#line 1343 "output/a-sin-sem-cod-interm.tab.c"
+#line 1390 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 24: /* comparison_op: LT  */
-#line 229 "a-sin-sem-cod-interm.y"
+  case 26: /* comparison_op: LT  */
+#line 266 "a-sin-sem-cod-interm.y"
        { (yyval.str) = "<"; }
-#line 1349 "output/a-sin-sem-cod-interm.tab.c"
+#line 1396 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 25: /* comparison_op: GT  */
-#line 230 "a-sin-sem-cod-interm.y"
+  case 27: /* comparison_op: GT  */
+#line 267 "a-sin-sem-cod-interm.y"
          { (yyval.str) = ">"; }
-#line 1355 "output/a-sin-sem-cod-interm.tab.c"
+#line 1402 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 26: /* comparison_op: LE  */
-#line 231 "a-sin-sem-cod-interm.y"
+  case 28: /* comparison_op: LE  */
+#line 268 "a-sin-sem-cod-interm.y"
          { (yyval.str) = "<="; }
-#line 1361 "output/a-sin-sem-cod-interm.tab.c"
+#line 1408 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 27: /* comparison_op: GE  */
-#line 232 "a-sin-sem-cod-interm.y"
+  case 29: /* comparison_op: GE  */
+#line 269 "a-sin-sem-cod-interm.y"
          { (yyval.str) = ">="; }
-#line 1367 "output/a-sin-sem-cod-interm.tab.c"
+#line 1414 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 28: /* comparison_op: EQ  */
-#line 233 "a-sin-sem-cod-interm.y"
+  case 30: /* comparison_op: EQ  */
+#line 270 "a-sin-sem-cod-interm.y"
          { (yyval.str) = "=="; }
-#line 1373 "output/a-sin-sem-cod-interm.tab.c"
+#line 1420 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 29: /* comparison_op: NE  */
-#line 234 "a-sin-sem-cod-interm.y"
+  case 31: /* comparison_op: NE  */
+#line 271 "a-sin-sem-cod-interm.y"
          { (yyval.str) = "!="; }
-#line 1379 "output/a-sin-sem-cod-interm.tab.c"
+#line 1426 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 30: /* expr: NUMBER_INT  */
-#line 239 "a-sin-sem-cod-interm.y"
+  case 32: /* expr: NUMBER_INT  */
+#line 276 "a-sin-sem-cod-interm.y"
     {
         (yyval.expr).type = "int";
         (yyval.expr).value = (yyvsp[0].num);
     }
-#line 1388 "output/a-sin-sem-cod-interm.tab.c"
+#line 1435 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 31: /* expr: NUMBER_FLOAT  */
-#line 244 "a-sin-sem-cod-interm.y"
+  case 33: /* expr: NUMBER_FLOAT  */
+#line 281 "a-sin-sem-cod-interm.y"
     {
         (yyval.expr).type = "float";
         (yyval.expr).fvalue = (yyvsp[0].num);
     }
-#line 1397 "output/a-sin-sem-cod-interm.tab.c"
+#line 1444 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 32: /* expr: IDENTIFIER  */
-#line 249 "a-sin-sem-cod-interm.y"
+  case 34: /* expr: IDENTIFIER  */
+#line 286 "a-sin-sem-cod-interm.y"
     {
         checkVariableDeclared((yyvsp[0].str));
         for (int i = 0; i < symbolCount; i++) {
@@ -1407,11 +1454,11 @@ yyreduce:
             }
         }
     }
-#line 1411 "output/a-sin-sem-cod-interm.tab.c"
+#line 1458 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 33: /* expr: expr '+' expr  */
-#line 259 "a-sin-sem-cod-interm.y"
+  case 35: /* expr: expr '+' expr  */
+#line 296 "a-sin-sem-cod-interm.y"
     {
         if (strcmp((yyvsp[-2].expr).type, (yyvsp[0].expr).type) != 0) {
             semanticError("Tipos incompatíveis em operação de soma", yylineno);
@@ -1423,11 +1470,11 @@ yyreduce:
             (yyval.expr).fvalue = (yyvsp[-2].expr).fvalue + (yyvsp[0].expr).fvalue;
         }
     }
-#line 1427 "output/a-sin-sem-cod-interm.tab.c"
+#line 1474 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 34: /* expr: expr '-' expr  */
-#line 271 "a-sin-sem-cod-interm.y"
+  case 36: /* expr: expr '-' expr  */
+#line 308 "a-sin-sem-cod-interm.y"
     {
         if (strcmp((yyvsp[-2].expr).type, (yyvsp[0].expr).type) != 0) {
             semanticError("Tipos incompatíveis em operação de subtração", yylineno);
@@ -1439,11 +1486,11 @@ yyreduce:
             (yyval.expr).fvalue = (yyvsp[-2].expr).fvalue - (yyvsp[0].expr).fvalue;
         }
     }
-#line 1443 "output/a-sin-sem-cod-interm.tab.c"
+#line 1490 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 35: /* expr: expr '*' expr  */
-#line 283 "a-sin-sem-cod-interm.y"
+  case 37: /* expr: expr '*' expr  */
+#line 320 "a-sin-sem-cod-interm.y"
     {
         if (strcmp((yyvsp[-2].expr).type, (yyvsp[0].expr).type) != 0) {
             semanticError("Tipos incompatíveis em operação de multiplicação", yylineno);
@@ -1455,11 +1502,11 @@ yyreduce:
             (yyval.expr).fvalue = (yyvsp[-2].expr).fvalue * (yyvsp[0].expr).fvalue;
         }
     }
-#line 1459 "output/a-sin-sem-cod-interm.tab.c"
+#line 1506 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 36: /* expr: expr '/' expr  */
-#line 295 "a-sin-sem-cod-interm.y"
+  case 38: /* expr: expr '/' expr  */
+#line 332 "a-sin-sem-cod-interm.y"
     {
         if (strcmp((yyvsp[-2].expr).type, (yyvsp[0].expr).type) != 0) {
             semanticError("Tipos incompatíveis em operação de divisão", yylineno);
@@ -1474,19 +1521,19 @@ yyreduce:
             (yyval.expr).fvalue = (yyvsp[-2].expr).fvalue / (yyvsp[0].expr).fvalue;
         }
     }
-#line 1478 "output/a-sin-sem-cod-interm.tab.c"
+#line 1525 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
-  case 37: /* expr: '(' expr ')'  */
-#line 310 "a-sin-sem-cod-interm.y"
+  case 39: /* expr: '(' expr ')'  */
+#line 347 "a-sin-sem-cod-interm.y"
     {
         (yyval.expr) = (yyvsp[-1].expr);
     }
-#line 1486 "output/a-sin-sem-cod-interm.tab.c"
+#line 1533 "output/a-sin-sem-cod-interm.tab.c"
     break;
 
 
-#line 1490 "output/a-sin-sem-cod-interm.tab.c"
+#line 1537 "output/a-sin-sem-cod-interm.tab.c"
 
       default: break;
     }
@@ -1679,7 +1726,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 315 "a-sin-sem-cod-interm.y"
+#line 352 "a-sin-sem-cod-interm.y"
 
 
 /* Função para adicionar símbolos à tabela */

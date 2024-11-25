@@ -42,6 +42,6 @@ func main() {
     // c = 30;  // Deve gerar erro semântico
     
     // Teste de tipo incompatível
-    // var y int;
-    // y = 3.14;  // Deve gerar erro de tipo
+    var y int;
+    y = 3.14;  // Deve gerar erro de tipo
 }
