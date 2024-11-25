@@ -136,6 +136,12 @@ atr_var_int:
         sprintf(code, "%s = %d", $1, $3);
         generateIntermediateCode(code);
     }
+    | IDENTIFIER '=' NUMBER_FLOAT ';'
+    {
+        checkVariableDeclared($1);
+        checkVariableType($1, "int");
+        semanticError("Não é possível atribuir um valor float a uma variável int", yylineno);
+    }
     ;
 
 println_stmt:
