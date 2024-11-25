@@ -158,6 +158,37 @@ println_stmt:
         sprintf(code, "CALL %s.%s, %s", $1, $3, $5);
         generateIntermediateCode(code);
     }
+    | IDENTIFIER '.' IDENTIFIER '(' IDENTIFIER ')' ';'
+    {
+        // Verifica se a variável foi inicializada antes de ser usada
+        for (int i = 0; i < symbolCount; i++) {
+            if (strcmp(symbolTable[i].name, $5) == 0) {
+                if (!symbolTable[i].initialized) {
+                    char error[100];
+                    sprintf(error, "Variável '%s' está sendo usada sem ter sido inicializada", $5);
+                    semanticError(error, yylineno);
+                }
+                break;
+            }
+        }
+        
+        int fmtImported = 0;
+        for (int i = 0; i < symbolCount; i++) {
+            if (strcmp(symbolTable[i].type, "import") == 0 && 
+                strstr(symbolTable[i].name, "fmt") != NULL) {
+                fmtImported = 1;
+                break;
+            }
+        }
+        if (!fmtImported) {
+            semanticError("Pacote 'fmt' não importado", yylineno);
+        }
+        
+        printf("(Análise Sintática/Semântica): reconhecido: chamada de %s.%s com variável %s\n", $1, $3, $5);
+        char code[100];
+        sprintf(code, "CALL %s.%s, %s", $1, $3, $5);
+        generateIntermediateCode(code);
+    }
     ;
 
 if_stmt:
